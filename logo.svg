@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <!-- 单色系渐变背景：亮青绿到薄荷绿 -->
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#34D399" />
+      <stop offset="100%" stop-color="#10B981" />
+    </linearGradient>
+    
+    <!-- 渡鸦主体微渐变：纯白到极浅的青绿 -->
+    <linearGradient id="ravenGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF" />
+      <stop offset="100%" stop-color="#E6FFFA" />
+    </linearGradient>
+  </defs>
+
+  <!-- 1. 背景底座 -->
+  <rect width="512" height="512" rx="115" fill="url(#bgGrad)" />
+
+  <!-- 2. 渡鸦身体 -->
+  <rect x="96" y="176" width="320" height="280" rx="140" fill="url(#ravenGrad)" />
+
+  <!-- 3. 渡鸦头部 -->
+  <circle cx="210" cy="160" r="80" fill="url(#ravenGrad)" />
+
+  <!-- 4. 渡鸦喙部 -->
+  <path d="M 270 110 Q 370 70 430 100 Q 380 150 280 170 Z" fill="url(#ravenGrad)" />
+
+  <!-- 5. 渡鸦眼睛 -->
+  <circle cx="210" cy="140" r="12" fill="#34D399" />
+
+  <!-- 6. 中心挖空区域：已与身体中心对齐 -->
+  <rect x="186" y="256" width="140" height="120" rx="60" fill="#34D399" />
+</svg>

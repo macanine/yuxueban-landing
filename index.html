@@ -1,0 +1,1334 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>语学伴 - 陪你学 YouTube / Podcast / Instagram</title>
+<meta name="description" content="语学伴：Agent 驱动的英语学习台。刷到的、读到的英语素材扔进来，沉淀为你的个人知识库，聚合为闪卡与学习内容。">
+<link rel="icon" type="image/svg+xml" href="logo.svg">
+<!-- 现代中文字体：MiSans（小米开源），分片按需加载 -->
+<link rel="preconnect" href="https://registry.npmmirror.com" crossorigin>
+<link rel="stylesheet" href="fonts/misans.css">
+<style>
+  /* ============================================================
+     设计变量
+     ============================================================ */
+  :root {
+    --green: #00C776;
+    --green-deep: #00A863;
+    --green-mid: #35D894;
+    --green-soft: #E9FBF2;
+    --green-mist: #F3FDF8;
+    --ink: #111111;
+    --ink-2: #565656;
+    --ink-3: #9A9A9A;
+    --ink-4: #CFCFCF;
+    --border: #ECECEC;
+    --bg: #FFFFFF;
+    --bg-soft: #FAFAFA;
+    --ease-out: cubic-bezier(.22, 1, .36, 1);
+    --ease-soft: cubic-bezier(.4, .2, .2, 1);
+    --shell: 1120px;
+    /* 现代中文字体栈：MiSans 优先，逐级降级到各平台自带现代中文字体 */
+    --font-sans: "MiSans", "HarmonyOS Sans SC", "HarmonyOS Sans", "PingFang SC",
+                 "Hiragino Sans GB", "Source Han Sans SC", "Noto Sans SC",
+                 "Microsoft YaHei", system-ui, -apple-system, "Segoe UI", sans-serif;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+  body {
+    font-family: var(--font-sans);
+    color: var(--ink);
+    background: var(--bg);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+  a { text-decoration: none; color: inherit; }
+  svg { display: block; }
+  .container { width: 100%; max-width: var(--shell); margin: 0 auto; padding: 0 24px; }
+
+  /* ============================================================
+     导航栏：吸顶 + 滚动进度 + 当前板块高亮
+     ============================================================ */
+  .nav {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(255,255,255,.86);
+    backdrop-filter: saturate(180%) blur(16px);
+    -webkit-backdrop-filter: saturate(180%) blur(16px);
+    transition: border-color .3s, box-shadow .3s;
+  }
+  .nav.is-stuck { border-bottom: 1px solid var(--border); box-shadow: 0 6px 24px rgba(17,17,17,.05); }
+  .nav-inner { display: flex; align-items: center; justify-content: space-between; gap: 20px; height: 64px; }
+  .logo {
+    display: inline-flex; align-items: center; gap: 10px;
+    font-size: 17px; font-weight: 900; letter-spacing: .08em; white-space: nowrap;
+  }
+  .logo .wordmark { display: inline-flex; align-items: baseline; }
+  .logo .dot { color: var(--green); margin-left: -.08em; }
+  .logo .raven { width: 30px; height: 30px; flex: none; border-radius: 9px; transition: transform .4s var(--ease-out); }
+  .logo:hover .raven { transform: rotate(-10deg) scale(1.1); }
+  .nav-links { display: flex; gap: 36px; font-size: 15px; font-weight: 600; }
+  .nav-links a { position: relative; padding: 4px 0; color: var(--ink); transition: color .25s; }
+  .nav-links a::after {
+    content: ""; position: absolute; left: 0; right: 0; bottom: -2px; height: 2px;
+    background: var(--green); border-radius: 2px;
+    transform: scaleX(0); transform-origin: center;
+    transition: transform .35s var(--ease-out);
+  }
+  .nav-links a:hover { color: var(--green-deep); }
+  .nav-links a:hover::after, .nav-links a.active::after { transform: scaleX(1); }
+  .nav-links a.active { color: var(--green-deep); }
+  .btn-pill-dark {
+    position: relative; overflow: hidden;
+    background: var(--ink); color: #fff; padding: 9px 24px; border-radius: 99px;
+    font-size: 14.5px; font-weight: 600; white-space: nowrap;
+    transition: background .25s, transform .2s var(--ease-out);
+  }
+  .btn-pill-dark:hover { background: var(--green-deep); transform: translateY(-1px); }
+  .nav-progress {
+    position: absolute; left: 0; bottom: -1px; width: 100%; height: 2px;
+    background: linear-gradient(90deg, var(--green), var(--green-mid));
+    transform: scaleX(0); transform-origin: left center;
+    will-change: transform;
+  }
+
+  /* ============================================================
+     渡鸦 Logo：眨眼 / 歪头 / 轻啄（渡鸦喜欢收集闪亮的小物件，
+     正好呼应「万物皆可记一笔」）
+     ============================================================ */
+  .raven .rv-eye {
+    transform-box: fill-box; transform-origin: center;
+    animation: rvBlink 5.4s infinite;
+  }
+  @keyframes rvBlink {
+    0%, 93%, 100% { transform: scaleY(1); }
+    96% { transform: scaleY(.08); }
+  }
+  .raven .rv-head {
+    transform-box: fill-box; transform-origin: 26% 82%;
+    animation: rvTilt 6s ease-in-out infinite;
+  }
+  @keyframes rvTilt {
+    0%, 20%, 50%, 72%, 100% { transform: rotate(0); }
+    28% { transform: rotate(2.4deg); }
+    40% { transform: rotate(-2deg); }
+    54% { transform: rotate(10deg); }
+    58% { transform: rotate(7.5deg); }
+    62% { transform: rotate(11deg); }
+  }
+  .raven .rv-beak {
+    transform-box: fill-box; transform-origin: 10% 55%;
+    animation: rvBeak 6s ease-in-out infinite;
+  }
+  @keyframes rvBeak {
+    0%, 50%, 64%, 100% { transform: rotate(0); }
+    54% { transform: rotate(-6deg); }
+    58% { transform: rotate(3deg); }
+  }
+
+  /* ============================================================
+     Hero
+     ============================================================ */
+  .hero { position: relative; overflow: hidden; padding: 88px 0 0; }
+  .hero::before {
+    content: ""; position: absolute; inset: 0; pointer-events: none;
+    background:
+      radial-gradient(760px 420px at 50% -8%, rgba(0,199,118,.10), transparent 62%),
+      linear-gradient(115deg, transparent 49.92%, rgba(0,0,0,.042) 50%, transparent 50.08%) -140px 0 / 460px 460px,
+      linear-gradient(115deg, transparent 49.94%, rgba(0,199,118,.13) 50%, transparent 50.06%) -140px 0 / 460px 460px;
+  }
+  /* 光标跟随柔光 */
+  .hero-glow {
+    position: absolute; inset: 0; z-index: 0; pointer-events: none;
+    background: radial-gradient(320px circle at var(--gx, 50%) var(--gy, 18%), rgba(0,199,118,.11), transparent 70%);
+    opacity: 0; transition: opacity .5s;
+  }
+  .hero:hover .hero-glow { opacity: 1; }
+  /* 斜置品牌水印（随滚动轻微视差） */
+  .watermark {
+    position: absolute; left: -110px; top: 296px; z-index: 0;
+    font-size: 124px; font-weight: 900; line-height: .92;
+    color: #F2F2F2; letter-spacing: .01em;
+    transform: rotate(-24deg); transform-origin: left top;
+    user-select: none; pointer-events: none;
+  }
+  .watermark .wm-green { color: #DFF6EC; }
+
+  .hero-inner { position: relative; z-index: 1; text-align: center; }
+
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-size: 13px; font-weight: 600;
+    color: var(--green-deep); background: var(--green-soft);
+    border: 1px solid rgba(0,199,118,.2);
+    padding: 6px 15px; border-radius: 99px; margin-bottom: 30px;
+  }
+  .hero-badge .pulse {
+    width: 6px; height: 6px; border-radius: 50%; background: var(--green);
+    animation: pulse 2.4s infinite;
+  }
+  @keyframes pulse {
+    0% { box-shadow: 0 0 0 0 rgba(0,199,118,.5); }
+    70% { box-shadow: 0 0 0 8px rgba(0,199,118,0); }
+    100% { box-shadow: 0 0 0 0 rgba(0,199,118,0); }
+  }
+
+  .hero-title {
+    display: flex; flex-direction: column; align-items: center; gap: 6px;
+    font-size: clamp(30px, 7.4vw, 60px);
+    font-weight: 900; letter-spacing: -.02em; line-height: 1.18;
+    animation: floaty 7s ease-in-out infinite alternate;
+  }
+  @keyframes floaty { from { transform: translateY(0); } to { transform: translateY(-7px); } }
+  .title-line { display: inline-flex; align-items: center; justify-content: center; gap: .26em; }
+  .brand { letter-spacing: .01em; }
+  .brand .arrow { color: var(--green); margin-left: .04em; }
+  .lead { font-weight: 800; }
+
+  /* 灵动切换词：上下翻转 + 高亮笔触扫入 */
+  .rotator {
+    position: relative; display: inline-block;
+    height: 1.1em; color: var(--green);
+    font-weight: 900; letter-spacing: -.01em;
+  }
+  .rot-item {
+    position: absolute; left: 50%; top: 0; white-space: nowrap;
+    padding: 0 .06em;
+    transform: translate(-50%, 108%);
+    opacity: 0; filter: blur(5px);
+    transition: transform .66s var(--ease-out), opacity .44s ease, filter .44s ease;
+    will-change: transform, opacity;
+  }
+  .rot-item::before {
+    content: ""; position: absolute; left: -.02em; right: -.02em; top: .1em; bottom: .07em;
+    background: linear-gradient(90deg, var(--green-soft), #D8F7E9);
+    border-radius: .12em; z-index: -1;
+    transform: scaleX(0); transform-origin: left center;
+    transition: transform .55s var(--ease-out);
+  }
+  .rot-item.is-in { transform: translate(-50%, 0); opacity: 1; filter: blur(0); z-index: 2; }
+  .rot-item.is-in::before { transform: scaleX(1); }
+  .rot-item.is-out {
+    transform: translate(-50%, -108%); opacity: 0; filter: blur(5px);
+    transition-duration: .5s; z-index: 1;
+  }
+
+  .hero p.sub {
+    margin: 26px auto 0; max-width: 620px;
+    font-size: clamp(15px, 1.9vw, 17.5px); color: var(--ink-2); line-height: 1.92;
+    animation: floaty 7s ease-in-out infinite alternate; animation-delay: -3.5s;
+  }
+  .hero-actions { margin-top: 38px; display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+  .btn {
+    position: relative; overflow: hidden;
+    display: inline-flex; align-items: center; justify-content: center; gap: 9px;
+    padding: 14px 32px; border-radius: 11px; font-size: 15.5px; font-weight: 600;
+    transition: transform .2s var(--ease-out), box-shadow .25s, background .25s, color .25s;
+  }
+  .btn-primary { background: var(--green); color: #fff; box-shadow: 0 10px 26px rgba(0,199,118,.3); }
+  .btn-primary:hover { background: var(--green-deep); transform: translateY(-2px); box-shadow: 0 14px 34px rgba(0,199,118,.36); }
+  .btn-outline { background: #fff; color: var(--green-deep); border: 1.5px solid var(--green); }
+  .btn-outline:hover { background: var(--green-soft); transform: translateY(-2px); }
+  /* 按钮扫光 */
+  .btn::after {
+    content: ""; position: absolute; top: 0; bottom: 0; width: 42%;
+    background: linear-gradient(100deg, transparent, rgba(255,255,255,.55), transparent);
+    transform: translateX(-160%) skewX(-18deg);
+    transition: transform .7s var(--ease-out);
+  }
+  .btn:hover::after { transform: translateX(320%) skewX(-18deg); }
+  .btn-outline::after { background: linear-gradient(100deg, transparent, rgba(0,199,118,.16), transparent); }
+
+  /* 首屏入场错峰 */
+  .anim { animation: riseIn .85s var(--ease-out) both; animation-delay: var(--d, 0s); }
+  @keyframes riseIn {
+    from { opacity: 0; transform: translateY(26px); }
+    to { opacity: 1; transform: none; }
+  }
+
+  /* ============================================================
+     产品界面示意（侧栏 / 对话 / 闪卡）
+     ============================================================ */
+  .mockup-wrap { position: relative; z-index: 1; max-width: 960px; margin: 68px auto 0; padding: 0 24px; }
+
+  /* 首屏：渡鸦栖息在应用窗口右上角，闪卡飞入腹中口袋 */
+  .hero-raven {
+    position: absolute; top: -68px; right: 48px; z-index: 6;
+    width: 96px; height: 96px; border-radius: 24px;
+    filter: drop-shadow(0 14px 26px rgba(0,199,118,.35));
+    animation: floaty 5.2s ease-in-out infinite alternate;
+  }
+  .hero-raven .rv-whole { animation: rvHop 6s ease-in-out infinite; }
+  @keyframes rvHop {
+    0%, 36%, 48%, 100% { transform: translateY(0); }
+    42% { transform: translateY(7px); }
+  }
+  .rv-chip { opacity: 0; animation: rvChip 6s ease-in-out infinite; }
+  @keyframes rvChip {
+    0%   { transform: translate(424px, 112px) rotate(16deg) scale(1); opacity: 0; }
+    8%   { opacity: 1; }
+    34%  { transform: translate(256px, 316px) rotate(-6deg) scale(.66); opacity: 1; }
+    42%  { transform: translate(256px, 316px) rotate(-6deg) scale(.28); opacity: 0; }
+    100% { transform: translate(256px, 316px) rotate(-6deg) scale(.28); opacity: 0; }
+  }
+  .hero-raven .rv-hollow {
+    transform-box: fill-box; transform-origin: center;
+    animation: rvPocket 6s ease-in-out infinite;
+  }
+  @keyframes rvPocket {
+    0%, 36%, 54%, 100% { transform: scale(1); }
+    44% { transform: scale(1.14); }
+  }
+  .mockup {
+    background: #fff; border: 1px solid var(--border);
+    border-radius: 18px; overflow: hidden; text-align: left;
+    box-shadow: 0 2px 6px rgba(17,17,17,.03), 0 26px 70px rgba(17,17,17,.10);
+  }
+  .mockup-bar {
+    display: flex; align-items: center; gap: 8px;
+    padding: 12px 16px; border-bottom: 1px solid var(--border); background: #FAFAFA;
+  }
+  .dot { width: 11px; height: 11px; border-radius: 50%; flex: none; }
+  .dot.r{background:#FF5F57}.dot.y{background:#FEBC2E}.dot.g{background:#28C840}
+  .mockup-title { margin-left: 10px; font-size: 12.5px; color: var(--ink-3); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+  .mockup-body { display: grid; grid-template-columns: 178px 1fr 250px; }
+  .mk-side { border-right: 1px solid var(--border); background: #FCFCFC; padding: 18px 14px; }
+  .mk-side-title { font-size: 11.5px; font-weight: 700; letter-spacing: .06em; color: var(--ink-3); margin-bottom: 12px; }
+  .mk-folder {
+    display: flex; align-items: center; gap: 9px;
+    padding: 8px 10px; border-radius: 9px; margin-bottom: 4px;
+    font-size: 13px; color: var(--ink-2);
+    transition: background .25s, color .25s;
+  }
+  .mk-folder:hover, .mk-folder.on { background: var(--green-soft); color: var(--green-deep); }
+  .mk-folder.on { font-weight: 600; }
+  .mk-folder .fd { width: 15px; height: 15px; border-radius: 4px; background: #E4E4E4; flex: none; }
+  .mk-folder.on .fd { background: var(--green); }
+  .mk-count { margin-left: auto; font-size: 11px; color: var(--ink-3); }
+  .mk-progress { margin-top: 18px; padding-top: 16px; border-top: 1px solid var(--border); display: flex; align-items: center; gap: 10px; }
+  .ring { position: relative; width: 38px; height: 38px; flex: none; }
+  .ring svg { transform: rotate(-90deg); }
+  .ring .ring-num { position: absolute; inset: 0; display: grid; place-items: center; font-size: 10.5px; font-weight: 700; color: var(--green-deep); }
+  .mk-progress .txt { font-size: 11.5px; color: var(--ink-3); line-height: 1.5; }
+
+  .chat { padding: 26px 22px; display: flex; flex-direction: column; gap: 14px; }
+  .bubble { max-width: 92%; padding: 12px 16px; border-radius: 15px; font-size: 13.8px; line-height: 1.62; }
+  .bubble.user { align-self: flex-end; background: var(--green); color: #fff; border-bottom-right-radius: 4px; }
+  .bubble.agent { align-self: flex-start; background: #F7F7F7; border: 1px solid var(--border); border-bottom-left-radius: 4px; color: var(--ink-2); }
+  .bubble.agent b { color: var(--ink); }
+  .tag-row { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 9px; }
+  .tag { font-size: 11.5px; padding: 3px 10px; border-radius: 99px; background: var(--green-soft); color: var(--green-deep); font-weight: 600; }
+  .typing { display: inline-flex; gap: 4px; align-items: center; }
+  .typing i { width: 5px; height: 5px; border-radius: 50%; background: var(--green); animation: blink 1.3s infinite ease-in-out; }
+  .typing i:nth-child(2) { animation-delay: .18s; }
+  .typing i:nth-child(3) { animation-delay: .36s; }
+  @keyframes blink { 0%,80%,100% { opacity: .25; transform: translateY(0); } 40% { opacity: 1; transform: translateY(-2px); } }
+
+  .mk-cards { border-left: 1px solid var(--border); background: #FCFCFC; padding: 24px 18px; display: flex; flex-direction: column; gap: 12px; }
+  .fc-title { font-size: 12.5px; font-weight: 700; color: var(--ink-3); letter-spacing: .06em; }
+  .flashcard {
+    padding: 13px 15px; border-radius: 13px; border: 1px solid var(--border);
+    background: #fff; box-shadow: 0 2px 8px rgba(0,0,0,.035); font-size: 13px;
+    animation: floaty 4.6s ease-in-out infinite alternate;
+  }
+  .flashcard:nth-child(3) { animation-delay: -1.6s; }
+  .flashcard:nth-child(4) { animation-delay: -3.2s; }
+  .flashcard .q { font-weight: 700; }
+  .flashcard .a { color: var(--ink-2); margin-top: 4px; font-size: 12.5px; }
+  .flashcard .src { margin-top: 8px; font-size: 11px; color: var(--green-deep); }
+
+  /* ============================================================
+     素材来源跑马灯
+     ============================================================ */
+  .marquee { position: relative; z-index: 1; padding: 42px 0 78px; display: flex; flex-direction: column; align-items: center; gap: 16px; }
+  .marquee-label { font-size: 12px; font-weight: 700; letter-spacing: .16em; color: var(--ink-3); text-transform: uppercase; }
+  .marquee-viewport {
+    position: relative; width: 100%; overflow: hidden;
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
+    mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
+  }
+  .marquee-track { display: flex; width: max-content; animation: marquee 34s linear infinite; }
+  .marquee-viewport:hover .marquee-track { animation-play-state: paused; }
+  @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+  .marquee-group { display: flex; gap: 12px; padding-right: 12px; }
+  .chip {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 9px 18px; border: 1px solid var(--border); border-radius: 99px;
+    background: #fff; font-size: 14px; color: var(--ink-2); white-space: nowrap;
+    transition: border-color .25s, color .25s, transform .25s var(--ease-out);
+  }
+  .chip:hover { border-color: rgba(0,199,118,.5); color: var(--green-deep); transform: translateY(-2px); }
+  .chip .bullet { width: 6px; height: 6px; border-radius: 2px; background: var(--green); flex: none; transform: rotate(45deg); }
+
+  /* ============================================================
+     板块通用
+     ============================================================ */
+  section.block { position: relative; padding: 100px 0 84px; }
+  section.block.alt { background: var(--bg-soft); }
+  .dots-orn {
+    position: absolute; width: 210px; height: 150px; pointer-events: none; opacity: .55;
+    background-image: radial-gradient(circle, #D5D5D5 1.2px, transparent 1.2px);
+    background-size: 15px 15px;
+    -webkit-mask-image: linear-gradient(135deg, #000, transparent 72%);
+    mask-image: linear-gradient(135deg, #000, transparent 72%);
+  }
+  .dots-orn.tl { left: 8px; top: 40px; }
+  .dots-orn.br { right: 8px; bottom: 40px; transform: rotate(180deg); }
+
+  .sec-head { position: relative; z-index: 1; text-align: center; max-width: 660px; margin: 0 auto 58px; }
+  .sec-eyebrow {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-size: 12.5px; font-weight: 700; letter-spacing: .16em;
+    color: var(--green-deep); text-transform: uppercase; margin-bottom: 16px;
+  }
+  .sec-eyebrow::before, .sec-eyebrow::after { content: ""; width: 22px; height: 1px; background: rgba(0,199,118,.45); }
+  .sec-head h2 { font-size: clamp(26px, 4.4vw, 40px); font-weight: 900; letter-spacing: -.02em; line-height: 1.25; }
+  .sec-head h2 .hl { color: var(--green); }
+  .sec-head p { margin-top: 16px; color: var(--ink-2); font-size: 16px; }
+
+  .grid { position: relative; z-index: 1; display: grid; gap: 20px; }
+  .grid-4 { grid-template-columns: repeat(4, 1fr); }
+  .grid-3 { grid-template-columns: repeat(3, 1fr); }
+
+  .card {
+    position: relative; overflow: hidden;
+    background: #fff; border: 1px solid var(--border); border-radius: 16px;
+    padding: 30px 26px;
+    transition: transform .34s var(--ease-out), box-shadow .34s, border-color .34s;
+  }
+  /* 光标聚光 */
+  .card::before {
+    content: ""; position: absolute; inset: 0; opacity: 0; transition: opacity .35s;
+    background: radial-gradient(260px circle at var(--mx, 50%) var(--my, 50%), rgba(0,199,118,.10), transparent 64%);
+  }
+  /* 顶部渐变细线滑入 */
+  .card::after {
+    content: ""; position: absolute; left: 0; right: 0; top: 0; height: 2px;
+    background: linear-gradient(90deg, var(--green), rgba(0,199,118,0));
+    transform: scaleX(0); transform-origin: left; transition: transform .4s var(--ease-out);
+  }
+  .card:hover { transform: translateY(-5px); box-shadow: 0 18px 44px rgba(17,17,17,.08); border-color: #E0E0E0; }
+  .card:hover::before { opacity: 1; }
+  .card:hover::after { transform: scaleX(1); }
+  .card > * { position: relative; z-index: 1; }
+  .card .icon {
+    width: 46px; height: 46px; border-radius: 13px; display: grid; place-items: center;
+    background: var(--green-soft); color: var(--green-deep); margin-bottom: 18px;
+    transition: transform .34s var(--ease-out);
+  }
+  .card:hover .icon { transform: scale(1.06) rotate(-4deg); }
+  .card h3 { font-size: 17px; font-weight: 800; margin-bottom: 8px; letter-spacing: -.01em; }
+  .card p { font-size: 14.5px; color: var(--ink-2); }
+
+  /* ============================================================
+     工作流：手绘插画 + 流动虚线
+     ============================================================ */
+  .flow { position: relative; z-index: 1; display: grid; grid-template-columns: repeat(3, 1fr); align-items: start; }
+  .flow-step { position: relative; text-align: center; padding: 0 20px; }
+  .flow-art { width: 100%; max-width: 210px; margin: 0 auto 22px; }
+  .flow-art .float-a { animation: floaty 5s ease-in-out infinite alternate; }
+  .flow-art .float-b { animation: floaty 5s ease-in-out infinite alternate; animation-delay: -2.5s; }
+  .flow-art .dash { stroke-dasharray: 5 6; animation: dashflow 1.6s linear infinite; }
+  @keyframes dashflow { to { stroke-dashoffset: -22; } }
+  .flow-art .spark { animation: sparkle 2.6s ease-in-out infinite; transform-origin: center; transform-box: fill-box; }
+  @keyframes sparkle {
+    0%, 100% { opacity: .4; transform: scale(.86); }
+    50% { opacity: 1; transform: scale(1.1); }
+  }
+  .flow-num {
+    width: 26px; height: 26px; margin: 0 auto 12px; border-radius: 8px;
+    background: var(--green); color: #fff; font-size: 13px; font-weight: 900;
+    display: grid; place-items: center; transform: rotate(-6deg);
+    transition: transform .3s var(--ease-out);
+  }
+  .flow-step:hover .flow-num { transform: rotate(0) scale(1.1); }
+  .flow-step h3 { font-size: 18px; font-weight: 800; margin-bottom: 8px; }
+  .flow-step p { font-size: 14.5px; color: var(--ink-2); max-width: 290px; margin: 0 auto; }
+  .flow-arrow { position: absolute; top: 66px; right: -20px; width: 44px; height: 24px; color: var(--green); }
+  .flow-arrow svg { width: 100%; height: 100%; }
+  .flow-arrow .dashline { stroke-dasharray: 4 5; animation: dashflow 1.4s linear infinite; }
+  .flow-arrow .dotflow { animation: dotmove 1.4s linear infinite; }
+  @keyframes dotmove {
+    0% { transform: translateX(0); opacity: 0; }
+    25% { opacity: 1; }
+    100% { transform: translateX(30px); opacity: 0; }
+  }
+
+  /* ============================================================
+     闪卡 3D 翻转演示
+     ============================================================ */
+  .flip-hint-wrap { text-align: center; }
+  .flip-hint {
+    display: inline-flex; align-items: center; gap: 7px;
+    margin-bottom: 34px; padding: 6px 14px; border-radius: 99px;
+    background: var(--green-soft); color: var(--green-deep);
+    font-size: 12.5px; font-weight: 600;
+  }
+  .flip-hint svg { animation: spinHint 2.8s ease-in-out infinite; }
+  @keyframes spinHint { 0%,100% { transform: rotate(0); } 50% { transform: rotate(180deg); } }
+
+  .flip {
+    position: relative; height: 216px; border-radius: 16px;
+    perspective: 1400px; cursor: pointer; outline: none;
+  }
+  .flip-inner {
+    position: relative; width: 100%; height: 100%;
+    transform-style: preserve-3d;
+    transition: transform .72s var(--ease-soft);
+  }
+  .flip.is-flipped .flip-inner { transform: rotateY(180deg); }
+  .flip:focus-visible .flip-inner { transform: rotateY(180deg); }
+  @media (hover: hover) and (pointer: fine) {
+    .flip:hover .flip-inner { transform: rotateY(180deg); }
+  }
+  .flip-face {
+    position: absolute; inset: 0;
+    display: flex; flex-direction: column;
+    padding: 24px; border-radius: 16px;
+    border: 1px solid var(--border); background: #fff;
+    box-shadow: 0 2px 10px rgba(17,17,17,.04);
+    -webkit-backface-visibility: hidden; backface-visibility: hidden;
+  }
+  .flip-front .cat, .flip-back .cat { font-size: 11.5px; font-weight: 700; color: var(--green-deep); letter-spacing: .04em; }
+  .flip-front .head { margin-top: auto; font-size: 22px; font-weight: 800; letter-spacing: -.01em; line-height: 1.3; }
+  .flip-front .sub { margin-top: 8px; font-size: 12.5px; color: var(--ink-3); }
+  .flip-front .corner {
+    position: absolute; right: 18px; bottom: 18px; width: 26px; height: 26px;
+    border-radius: 50%; background: var(--green-soft); color: var(--green-deep);
+    display: grid; place-items: center;
+  }
+  .flip-back {
+    transform: rotateY(180deg);
+    background: linear-gradient(155deg, #F3FDF8, #E6FAF1);
+    border-color: rgba(0,199,118,.28);
+  }
+  .flip-back .mean { margin-top: 12px; font-size: 17px; font-weight: 800; }
+  .flip-back .eg { margin-top: 10px; font-size: 13px; color: #2F6C56; line-height: 1.6; }
+  .flip-back .eg em { font-style: normal; border-bottom: 1.5px solid rgba(0,199,118,.45); }
+  .flip-back .foot { margin-top: auto; font-size: 11.5px; color: #4B8A72; }
+
+  /* ============================================================
+     理念：高亮扫入
+     ============================================================ */
+  .quote {
+    max-width: 800px; margin: 0 auto; text-align: center;
+    font-size: clamp(19px, 2.7vw, 26px); font-weight: 700;
+    line-height: 1.85; letter-spacing: -.01em;
+  }
+  .mark {
+    color: var(--green);
+    background-image: linear-gradient(90deg, var(--green-mid), var(--green));
+    background-repeat: no-repeat;
+    background-position: 0 .9em;
+    background-size: 0 3px;
+    transition: background-size 1s var(--ease-out);
+  }
+  .quote.in .mark { background-size: 100% 3px; }
+  .quote.in .mark.d1 { transition-delay: .3s; }
+
+  /* ============================================================
+     CTA
+     ============================================================ */
+  .cta-band {
+    position: relative; overflow: hidden; text-align: center;
+    margin: 0 24px 96px; padding: 78px 32px; border-radius: 26px;
+    background: linear-gradient(180deg, #F7FEFB 0%, #E8FBF2 100%);
+    border: 1px solid rgba(0,199,118,.18);
+  }
+  .cta-band::before {
+    content: ""; position: absolute; inset: 0; pointer-events: none;
+    background: repeating-linear-gradient(115deg, rgba(0,199,118,.09) 0 1px, transparent 1px 46px);
+    animation: slide 22s linear infinite;
+  }
+  @keyframes slide { to { background-position: 460px 0; } }
+  .cta-band > * { position: relative; z-index: 1; }
+  .cta-raven {
+    width: 64px; height: 64px; margin: 0 auto 22px; border-radius: 17px;
+    filter: drop-shadow(0 12px 22px rgba(0,199,118,.32));
+    animation: floaty 4.4s ease-in-out infinite alternate;
+  }
+  .cta-band h2 { font-size: clamp(25px, 4.4vw, 42px); font-weight: 900; letter-spacing: -.02em; }
+  .cta-band p { margin: 16px 0 32px; color: var(--ink-2); font-size: 16.5px; }
+
+  /* ============================================================
+     页脚
+     ============================================================ */
+  footer { border-top: 1px solid var(--border); padding: 40px 0 48px; }
+  .foot-inner { display: flex; justify-content: space-between; align-items: center; gap: 20px; flex-wrap: wrap; }
+  .foot-links { display: flex; gap: 28px; font-size: 13.5px; color: var(--ink-3); }
+  .foot-links a { transition: color .25s; }
+  .foot-links a:hover { color: var(--green-deep); }
+  .copyright { font-size: 13px; color: var(--ink-3); }
+
+  /* ============================================================
+     滚动入场
+     ============================================================ */
+  .reveal { opacity: 0; transform: translateY(24px); transition: opacity .75s var(--ease-out), transform .75s var(--ease-out); }
+  .reveal.in { opacity: 1; transform: none; }
+
+  /* ============================================================
+     响应式
+     ============================================================ */
+  @media (max-width: 1100px) { .mockup-body { grid-template-columns: 160px 1fr 226px; } }
+  @media (max-width: 1023px) { .watermark { display: none; } }
+  @media (max-width: 960px) {
+    .grid-4, .grid-3 { grid-template-columns: repeat(2, 1fr); }
+    .mk-side { display: none; }
+    .mockup-body { grid-template-columns: 1fr 236px; }
+  }
+  @media (max-width: 860px) {
+    .nav-links { gap: 26px; }
+    .flow { grid-template-columns: 1fr; gap: 46px; }
+    .flow-step { padding: 0; }
+    .flow-arrow { display: none; }
+    .flow-art { margin-bottom: 16px; }
+  }
+  @media (max-width: 768px) {
+    .nav-inner { height: 58px; }
+    .hero { padding-top: 62px; }
+    section.block { padding: 68px 0 56px; }
+    .sec-head { margin-bottom: 42px; }
+    .dots-orn { display: none; }
+    .mockup-wrap { margin-top: 48px; padding: 0 16px; }
+    .hero-raven { width: 64px; height: 64px; top: -30px; right: 12px; border-radius: 16px; }
+    .mockup-body { grid-template-columns: 1fr; }
+    .mk-cards { border-left: none; border-top: 1px solid var(--border); }
+    .chat { padding: 22px 18px; }
+    .marquee { padding: 30px 0 56px; }
+    .cta-band { margin: 0 16px 64px; padding: 56px 22px; border-radius: 20px; }
+    .container { padding: 0 18px; }
+    .foot-inner { flex-direction: column; align-items: flex-start; gap: 18px; }
+    .foot-links { flex-wrap: wrap; gap: 20px; }
+  }
+  @media (max-width: 620px) {
+    .nav-links { display: none; }
+    .grid-4, .grid-3 { grid-template-columns: 1fr; }
+    .card { padding: 26px 22px; }
+    .hero-actions { gap: 10px; }
+    .hero-actions .btn { flex: 1 1 0; min-width: 0; padding: 13px 10px; font-size: 15px; }
+    .bubble { font-size: 13.5px; }
+    .flip { height: 200px; }
+    .flip-face { padding: 20px; }
+    .mk-cards { padding: 20px 16px; }
+  }
+  @media (max-width: 400px) {
+    .hero-title { font-size: clamp(26px, 9.4vw, 34px); }
+    .btn-pill-dark { padding: 8px 18px; font-size: 13.5px; }
+    .flip-front .head { font-size: 20px; }
+    .hero-raven { width: 56px; height: 56px; top: -26px; right: 8px; }
+  }
+
+  /* ============================================================
+     无障碍：减少动态
+     ============================================================ */
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    *, *::before, *::after { animation: none !important; transition-duration: .01s !important; }
+    .reveal { opacity: 1; transform: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- 渡鸦 Logo 渐变定义（全页共用） -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <defs>
+    <linearGradient id="rvBgGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#35D894"/>
+      <stop offset="1" stop-color="#00C776"/>
+    </linearGradient>
+    <linearGradient id="rvBodyGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#FFFFFF"/>
+      <stop offset="1" stop-color="#E6FFFA"/>
+    </linearGradient>
+  </defs>
+</svg>
+
+<!-- ================= 导航栏 ================= -->
+<nav class="nav" id="nav">
+  <div class="container nav-inner">
+    <a class="logo" href="#">
+      <svg class="raven" viewBox="0 0 512 512" aria-hidden="true">
+        <g class="rv-whole">
+          <rect width="512" height="512" rx="115" fill="url(#rvBgGrad)"/>
+          <rect x="96" y="176" width="320" height="280" rx="140" fill="url(#rvBodyGrad)"/>
+          <g class="rv-head">
+            <circle cx="210" cy="160" r="80" fill="url(#rvBodyGrad)"/>
+            <path class="rv-beak" d="M270 110 Q370 70 430 100 Q380 150 280 170 Z" fill="url(#rvBodyGrad)"/>
+            <circle class="rv-eye" cx="210" cy="140" r="12" fill="#00C776"/>
+          </g>
+          <rect class="rv-hollow" x="186" y="256" width="140" height="120" rx="60" fill="#00C776"/>
+        </g>
+      </svg>
+      <span class="wordmark">语学伴<span class="dot">.</span></span>
+    </a>
+    <div class="nav-links">
+      <a href="#capture" data-spy>采集</a>
+      <a href="#workflow" data-spy>工作流</a>
+      <a href="#cards" data-spy>闪卡</a>
+      <a href="#scenes" data-spy>场景</a>
+    </div>
+    <a class="btn-pill-dark" href="#cta">下载 App</a>
+  </div>
+  <span class="nav-progress" id="navProgress"></span>
+</nav>
+
+<!-- ================= Hero ================= -->
+<header class="hero" id="hero">
+  <span class="hero-glow" id="heroGlow"></span>
+  <div class="watermark" id="watermark">语学伴<span class="wm-green">▸</span></div>
+
+  <div class="container hero-inner">
+    <div class="anim" style="--d:.05s">
+      <div class="hero-badge"><span class="pulse"></span>Agent 驱动 · 万物皆可入卡</div>
+    </div>
+
+    <div class="anim" style="--d:.14s">
+      <h1 class="hero-title">
+        <span class="title-line">
+          <span class="brand">语学伴<span class="arrow">▸</span></span>
+          <span class="lead">陪你学</span>
+        </span>
+        <span class="title-line">
+          <span class="rotator" id="rotator">
+            <span class="rot-item">YouTube</span>
+            <span class="rot-item">Podcast</span>
+            <span class="rot-item">Instagram</span>
+            <span class="rot-item">大学英语</span>
+            <span class="rot-item">雅思</span>
+          </span>
+        </span>
+      </h1>
+    </div>
+
+    <div class="anim" style="--d:.24s">
+      <p class="sub">刷到的、听到的、读到的英语素材，截图、链接、PDF 扔进来就自动记一笔，沉淀为你的个人知识库——而不只是应试导向的背单词。</p>
+    </div>
+    <div class="anim hero-actions" style="--d:.34s">
+      <a class="btn btn-primary" href="#cta">免费开始</a>
+      <a class="btn btn-outline" href="#workflow">了解工作流</a>
+    </div>
+  </div>
+
+  <!-- 产品界面示意 -->
+  <div class="mockup-wrap anim" style="--d:.44s">
+    <!-- 渡鸦栖息在窗口上：闪卡飞入腹中口袋，吞下后满足地一蹲、再啄啄屏幕 -->
+    <svg class="raven hero-raven" viewBox="0 0 512 512" aria-hidden="true">
+      <g class="rv-whole">
+        <rect width="512" height="512" rx="115" fill="url(#rvBgGrad)"/>
+        <rect x="96" y="176" width="320" height="280" rx="140" fill="url(#rvBodyGrad)"/>
+        <g class="rv-head">
+          <circle cx="210" cy="160" r="80" fill="url(#rvBodyGrad)"/>
+          <path class="rv-beak" d="M270 110 Q370 70 430 100 Q380 150 280 170 Z" fill="url(#rvBodyGrad)"/>
+          <circle class="rv-eye" cx="210" cy="140" r="12" fill="#00C776"/>
+        </g>
+        <rect class="rv-hollow" x="186" y="256" width="140" height="120" rx="60" fill="#00C776"/>
+      </g>
+      <g class="rv-chip">
+        <rect x="-75" y="-50" width="150" height="100" rx="22" fill="#fff" stroke="#00C776" stroke-width="8"/>
+        <path d="M-40 -14h46M-40 14h30" stroke="#00C776" stroke-width="12" stroke-linecap="round"/>
+      </g>
+    </svg>
+    <div class="mockup">
+      <div class="mockup-bar">
+        <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
+        <span class="mockup-title">语学伴 — 我的英语知识库</span>
+      </div>
+      <div class="mockup-body">
+        <!-- 知识库侧栏 -->
+        <aside class="mk-side">
+          <div class="mk-side-title">知识库</div>
+          <div class="mk-folder on"><span class="fd"></span>日常口语<span class="mk-count">42</span></div>
+          <div class="mk-folder"><span class="fd"></span>雅思写作<span class="mk-count">31</span></div>
+          <div class="mk-folder"><span class="fd"></span>短视频<span class="mk-count">24</span></div>
+          <div class="mk-folder"><span class="fd"></span>大学英语<span class="mk-count">18</span></div>
+          <div class="mk-progress">
+            <span class="ring">
+              <svg width="38" height="38" viewBox="0 0 38 38">
+                <circle cx="19" cy="19" r="15.5" fill="none" stroke="#EAEAEA" stroke-width="4"/>
+                <circle cx="19" cy="19" r="15.5" fill="none" stroke="#00C776" stroke-width="4"
+                        stroke-linecap="round" stroke-dasharray="97.4" stroke-dashoffset="31"/>
+              </svg>
+              <span class="ring-num">68%</span>
+            </span>
+            <span class="txt">今日复习<br>已完成 12 / 18</span>
+          </div>
+        </aside>
+
+        <!-- 对话 -->
+        <div class="chat">
+          <div class="bubble user">📷 [截图] 刷到的一条推文："Not gonna lie, this is a game changer."</div>
+          <div class="bubble agent">
+            已记一笔 ✅ 识别到地道口语表达 <b>"not gonna lie (NGL)"</b>——"说实话"，社媒高频缩写。已生成闪卡，归入「日常口语」。
+            <div class="tag-row">
+              <span class="tag"># 日常口语</span><span class="tag"># 社媒用语</span><span class="tag"># B1</span>
+            </div>
+          </div>
+          <div class="bubble user">📄 [上传] 剑桥雅思教材 Unit 3 的 PDF</div>
+          <div class="bubble agent">
+            已解析 24 页 ✅ 提取 37 个核心词汇与 6 个长难句，全部转为闪卡碎片。要不要我基于它们生成一套<b>雅思机考模拟阅读</b>？
+          </div>
+          <div class="bubble agent"><span class="typing"><i></i><i></i><i></i></span></div>
+        </div>
+
+        <!-- 闪卡 -->
+        <aside class="mk-cards">
+          <div class="fc-title">今日闪卡 · 来自你的素材</div>
+          <div class="flashcard">
+            <div class="q">not gonna lie (NGL)</div>
+            <div class="a">说实话 / 不瞒你说</div>
+            <div class="src">📌 来自 X · 推文截图</div>
+          </div>
+          <div class="flashcard">
+            <div class="q">The evidence suggests that…</div>
+            <div class="a">学术写作高频句式</div>
+            <div class="src">📄 来自剑桥雅思 Unit 3</div>
+          </div>
+          <div class="flashcard">
+            <div class="q">hit different</div>
+            <div class="a">感觉格外不一样</div>
+            <div class="src">🎬 来自短视频收藏</div>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </div>
+
+  <!-- 素材来源跑马灯 -->
+  <div class="marquee">
+    <div class="marquee-label">素材从哪来</div>
+    <div class="marquee-viewport">
+      <div class="marquee-track">
+        <div class="marquee-group">
+          <span class="chip"><i class="bullet"></i>YouTube 视频</span>
+          <span class="chip"><i class="bullet"></i>Instagram</span>
+          <span class="chip"><i class="bullet"></i>Podcast</span>
+          <span class="chip"><i class="bullet"></i>X / 推文</span>
+          <span class="chip"><i class="bullet"></i>短视频字幕</span>
+          <span class="chip"><i class="bullet"></i>教材 PDF</span>
+          <span class="chip"><i class="bullet"></i>外刊文章</span>
+          <span class="chip"><i class="bullet"></i>影视片段</span>
+          <span class="chip"><i class="bullet"></i>论文摘要</span>
+          <span class="chip"><i class="bullet"></i>演讲字幕</span>
+        </div>
+        <div class="marquee-group" aria-hidden="true">
+          <span class="chip"><i class="bullet"></i>YouTube 视频</span>
+          <span class="chip"><i class="bullet"></i>Instagram</span>
+          <span class="chip"><i class="bullet"></i>Podcast</span>
+          <span class="chip"><i class="bullet"></i>X / 推文</span>
+          <span class="chip"><i class="bullet"></i>短视频字幕</span>
+          <span class="chip"><i class="bullet"></i>教材 PDF</span>
+          <span class="chip"><i class="bullet"></i>外刊文章</span>
+          <span class="chip"><i class="bullet"></i>影视片段</span>
+          <span class="chip"><i class="bullet"></i>论文摘要</span>
+          <span class="chip"><i class="bullet"></i>演讲字幕</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ================= 采集能力 ================= -->
+<section class="block" id="capture">
+  <span class="dots-orn tl"></span>
+  <span class="dots-orn br"></span>
+  <div class="container">
+    <div class="sec-head reveal">
+      <span class="sec-eyebrow">Capture</span>
+      <h2>万物皆可<span class="hl">记一笔</span></h2>
+      <p>英语素材散落在世界的每个角落。语学伴把它们收进一个 App——随手一扔，Agent 自动识别、整理、入库。</p>
+    </div>
+    <div class="grid grid-4">
+      <div class="card spot reveal">
+        <div class="icon">
+          <svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="2" width="12" height="20" rx="2.5"/><circle cx="12" cy="8" r="2.2"/><path d="M9.6 17h4.8"/></svg>
+        </div>
+        <h3>社交媒体截图</h3>
+        <p>在 YouTube、Instagram、短视频刷到的语言现象，截图扔进来即自动记一笔，附带语境与来源。</p>
+      </div>
+      <div class="card spot reveal">
+        <div class="icon">
+          <svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 6.5C10.5 4.8 8.3 4 5.5 4H3v13h3c2.4 0 4.3.7 6 2.2"/><path d="M12 6.5c1.5-1.7 3.7-2.5 6.5-2.5H21v13h-3c-2.4 0-4.3.7-6 2.2"/><path d="M12 6.5v12.7"/></svg>
+        </div>
+        <h3>教材与 PDF</h3>
+        <p>大学英语、剑桥雅思等各版本教材 PDF，整本解析，词汇、例句、长难句逐条转为学习资产。</p>
+      </div>
+      <div class="card spot reveal">
+        <div class="icon">
+          <svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 14v-2a8 8 0 0 1 16 0v2"/><rect x="2.6" y="13.6" width="4.2" height="6.4" rx="1.6"/><rect x="17.2" y="13.6" width="4.2" height="6.4" rx="1.6"/></svg>
+        </div>
+        <h3>音频与视频</h3>
+        <p>Podcast、影视片段、听力材料——转写、断句、提炼表达，听说素材也能沉淀入库。</p>
+      </div>
+      <div class="card spot reveal">
+        <div class="icon">
+          <svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13.4a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7L11.6 6"/><path d="M14 10.6a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7L12.4 18"/></svg>
+        </div>
+        <h3>网页与文章</h3>
+        <p>粘贴链接即可全文入库，外刊、博客、论文里的地道用法一个都不漏。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 工作流 ================= -->
+<section class="block alt" id="workflow">
+  <div class="container">
+    <div class="sec-head reveal">
+      <span class="sec-eyebrow">Workflow</span>
+      <h2>三步，从碎片到<span class="hl">体系</span></h2>
+      <p>采集 → 闪卡 → 聚合。Agent 负责所有繁琐的事，你只管学。</p>
+    </div>
+
+    <div class="flow">
+      <!-- 步骤 1：采集 -->
+      <div class="flow-step reveal">
+        <svg class="flow-art" viewBox="0 0 210 138" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <g stroke="#DCDCDC" stroke-width="1.7" fill="#fff">
+            <rect x="8" y="20" width="66" height="26" rx="8"/>
+            <rect x="8" y="56" width="66" height="26" rx="8"/>
+            <rect x="8" y="92" width="66" height="26" rx="8"/>
+          </g>
+          <g fill="#00C776">
+            <path d="M16 27.5l7 4-7 4z"/>
+            <circle cx="19.5" cy="69" r="3.4"/>
+            <rect x="15" y="99" width="9" height="12" rx="2"/>
+          </g>
+          <g stroke="#C4C4C4" stroke-width="2.2" stroke-linecap="round">
+            <path d="M32 33h28M32 69h28M32 105h28"/>
+          </g>
+          <g stroke="#00C776" stroke-width="1.6" stroke-linecap="round" stroke-dasharray="5 6">
+            <path class="dash" d="M78 33h22"/>
+            <path class="dash" d="M78 69h22"/>
+            <path class="dash" d="M78 105h22"/>
+          </g>
+          <g class="float-a">
+            <rect x="112" y="14" width="76" height="112" rx="12" fill="#fff" stroke="#111" stroke-width="1.9"/>
+            <rect x="120" y="26" width="60" height="34" rx="6" fill="#F2F2F2"/>
+            <path d="M127 37h40M127 46h26" stroke="#C4C4C4" stroke-width="2.6" stroke-linecap="round"/>
+            <rect x="120" y="68" width="60" height="20" rx="6" fill="#E9FBF2"/>
+            <path d="M128 78h34" stroke="#00C776" stroke-width="2.6" stroke-linecap="round"/>
+            <rect x="120" y="94" width="60" height="20" rx="6" fill="#F2F2F2"/>
+            <path d="M128 104h30" stroke="#C4C4C4" stroke-width="2.6" stroke-linecap="round"/>
+          </g>
+          <path class="spark" d="M196 22l3.4 7.6 7.6 3.4-7.6 3.4-3.4 7.6-3.4-7.6-7.6-3.4 7.6-3.4z" fill="#00C776"/>
+        </svg>
+        <div class="flow-num">1</div>
+        <h3>随手采集</h3>
+        <p>截图、上传、粘贴链接。任何格式的英语素材，扔进语学伴就自动记一笔。</p>
+      </div>
+
+      <span class="flow-arrow" aria-hidden="true">
+        <svg viewBox="0 0 44 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path class="dashline" d="M2 12h30" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+          <path d="M28 6l7 6-7 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+          <circle class="dotflow" cx="6" cy="12" r="3" fill="currentColor"/>
+        </svg>
+      </span>
+
+      <!-- 步骤 2：闪卡 -->
+      <div class="flow-step reveal">
+        <svg class="flow-art" viewBox="0 0 210 138" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <rect class="float-b" x="46" y="26" width="104" height="74" rx="12" fill="#F1F1F1" transform="rotate(-7 98 63)"/>
+          <g class="float-a">
+            <rect x="52" y="34" width="104" height="74" rx="12" fill="#fff" stroke="#111" stroke-width="1.9"/>
+            <rect x="62" y="44" width="30" height="10" rx="5" fill="#E9FBF2"/>
+            <path d="M67 49h20" stroke="#00C776" stroke-width="2.4" stroke-linecap="round"/>
+            <path d="M62 66h74M62 78h58M62 90h40" stroke="#CFCFCF" stroke-width="3" stroke-linecap="round"/>
+          </g>
+          <path class="spark" d="M172 30l3.6 8 8 3.6-8 3.6-3.6 8-3.6-8-8-3.6 8-3.6z" fill="#00C776"/>
+          <path class="spark" d="M26 94l2.4 5.4 5.4 2.4-5.4 2.4-2.4 5.4-2.4-5.4-5.4-2.4 5.4-2.4z" fill="#7FE0B4"/>
+        </svg>
+        <div class="flow-num">2</div>
+        <h3>统一为闪卡</h3>
+        <p>所有资产被 Agent 拆解、规范化为 flashcard 碎片，附带语境、来源与难度标签。</p>
+      </div>
+
+      <span class="flow-arrow" aria-hidden="true">
+        <svg viewBox="0 0 44 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path class="dashline" d="M2 12h30" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+          <path d="M28 6l7 6-7 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+          <circle class="dotflow" cx="6" cy="12" r="3" fill="currentColor"/>
+        </svg>
+      </span>
+
+      <!-- 步骤 3：聚合 -->
+      <div class="flow-step reveal">
+        <svg class="flow-art" viewBox="0 0 210 138" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <g fill="#E9FBF2" stroke="#00C776" stroke-width="1.4">
+            <rect class="float-b" x="14" y="28" width="18" height="18" rx="5"/>
+            <rect x="40" y="46" width="18" height="18" rx="5"/>
+            <rect class="float-b" x="14" y="64" width="18" height="18" rx="5"/>
+            <rect x="40" y="82" width="18" height="18" rx="5"/>
+            <rect class="float-b" x="14" y="100" width="18" height="18" rx="5"/>
+          </g>
+          <path class="dash" d="M70 69h26" stroke="#00C776" stroke-width="1.8" stroke-linecap="round" stroke-dasharray="5 6"/>
+          <path d="M90 62l7 7-7 7" stroke="#00C776" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+          <g class="float-a">
+            <rect x="110" y="22" width="82" height="96" rx="12" fill="#fff" stroke="#111" stroke-width="1.9"/>
+            <path d="M122 44h58M122 58h44M122 72h52" stroke="#CFCFCF" stroke-width="3" stroke-linecap="round"/>
+            <rect x="122" y="86" width="58" height="20" rx="6" fill="#E9FBF2"/>
+            <path d="M130 96h26" stroke="#00C776" stroke-width="2.6" stroke-linecap="round"/>
+          </g>
+          <g class="spark">
+            <circle cx="192" cy="28" r="11" fill="#00C776"/>
+            <path d="M187 28.4l3.6 3.6 6.8-7" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+          </g>
+        </svg>
+        <div class="flow-num">3</div>
+        <h3>聚合为学习内容</h3>
+        <p>Agent 根据你的目标重新聚合碎片：应试的生成机考真题，听说的泛化成对话练习。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 闪卡演示 ================= -->
+<section class="block" id="cards">
+  <span class="dots-orn tl"></span>
+  <div class="container">
+    <div class="sec-head reveal">
+      <span class="sec-eyebrow">Flashcards</span>
+      <h2>闪卡，是语学伴的<span class="hl">最小单位</span></h2>
+      <p>任何素材都会被打散成带语境的闪卡碎片：正面是表达，背面是释义、例句和来源。</p>
+    </div>
+    <div class="flip-hint-wrap reveal">
+      <span class="flip-hint">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0 1 15.3-6.4L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-15.3 6.4L3 16"/><path d="M3 21v-5h5"/></svg>
+        悬停或轻点卡片，翻开看看
+      </span>
+    </div>
+    <div class="grid grid-3">
+      <div class="flip reveal" tabindex="0" role="button" aria-label="翻转查看 hit different 的释义">
+        <div class="flip-inner">
+          <div class="flip-face flip-front">
+            <span class="cat"># 短视频 · B1</span>
+            <div class="head">hit different</div>
+            <div class="sub">翻转查看释义</div>
+            <span class="corner">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3v13M3.5 11.5L8 16l4.5-4.5"/></svg>
+            </span>
+          </div>
+          <div class="flip-face flip-back">
+            <span class="cat">释义</span>
+            <div class="mean">感觉格外不一样</div>
+            <div class="eg">This song <em>hits different</em> at 2 a.m.</div>
+            <div class="foot">🎬 来自短视频收藏 · 已复习 3 次</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="flip reveal" tabindex="0" role="button" aria-label="翻转查看 The evidence suggests that 的释义">
+        <div class="flip-inner">
+          <div class="flip-face flip-front">
+            <span class="cat"># 雅思写作 · B2</span>
+            <div class="head">The evidence<br>suggests that…</div>
+            <div class="sub">翻转查看释义</div>
+            <span class="corner">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3v13M3.5 11.5L8 16l4.5-4.5"/></svg>
+            </span>
+          </div>
+          <div class="flip-face flip-back">
+            <span class="cat">释义</span>
+            <div class="mean">有证据表明……</div>
+            <div class="eg"><em>The evidence suggests that</em> remote work raises output.</div>
+            <div class="foot">📄 来自剑桥雅思 Unit 3 · Task 2 可直接套用</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="flip reveal" tabindex="0" role="button" aria-label="翻转查看 not gonna lie 的释义">
+        <div class="flip-inner">
+          <div class="flip-face flip-front">
+            <span class="cat"># 日常口语 · B1</span>
+            <div class="head">not gonna lie<br>(NGL)</div>
+            <div class="sub">翻转查看释义</div>
+            <span class="corner">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3v13M3.5 11.5L8 16l4.5-4.5"/></svg>
+            </span>
+          </div>
+          <div class="flip-face flip-back">
+            <span class="cat">释义</span>
+            <div class="mean">说实话 / 不瞒你说</div>
+            <div class="eg"><em>NGL</em>, that ending caught me off guard.</div>
+            <div class="foot">📌 来自 X · 推文截图 · 社媒高频缩写</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 场景 ================= -->
+<section class="block alt" id="scenes">
+  <span class="dots-orn br"></span>
+  <div class="container">
+    <div class="sec-head reveal">
+      <span class="sec-eyebrow">Scenarios</span>
+      <h2>同一个知识库，<span class="hl">多种打开方式</span></h2>
+      <p>你的闪卡不是终点。Agent 会根据学习目标，把碎片重新聚合成真正可用的学习内容。</p>
+    </div>
+    <div class="grid grid-4">
+      <div class="card spot reveal">
+        <div class="icon">
+          <svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="4" width="19" height="13" rx="2"/><path d="M8 20.5h8M12 17v3.5"/><path d="M8.6 10.6l2.2 2.2 4.4-4.4"/></svg>
+        </div>
+        <h3>雅思机考</h3>
+        <p>基于你的素材生成雅思机考模拟题，阅读、听力一一对应，练的就是你积累过的东西。</p>
+      </div>
+      <div class="card spot reveal">
+        <div class="icon">
+          <svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h8l4.5 4.5V19a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Z"/><path d="M13.6 3v4.6h4.6"/><path d="M8 12.5h8M8 16.5h5"/></svg>
+        </div>
+        <h3>高考阅读</h3>
+        <p>教材与真题中的词汇句型自动对齐考纲，生成高考难度递进的阅读训练。</p>
+      </div>
+      <div class="card spot reveal">
+        <div class="icon">
+          <svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12.5c0 3.6-3.6 6.5-8 6.5-1 0-2-.15-2.9-.42L4.5 20l1.3-3.6C4.6 15.3 4 13.9 4 12.5 4 8.9 7.6 6 12 6s8 2.9 8 6.5Z"/><path d="M9 12h.01M12 12h.01M15 12h.01"/></svg>
+        </div>
+        <h3>情景对话</h3>
+        <p>听说导向的表达被泛化成真实场景对话，Agent 陪你练到脱口而出。</p>
+      </div>
+      <div class="card spot reveal">
+        <div class="icon">
+          <svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 12a8.5 8.5 0 0 1 14.3-6.2L20 7.5"/><path d="M20.5 12A8.5 8.5 0 0 1 6.2 18.2L4 16.5"/><path d="M20 3.5v4h-4M4 20.5v-4h4"/></svg>
+        </div>
+        <h3>科学复习</h3>
+        <p>间隔重复算法自动安排每日闪卡，记住了什么、忘了什么，Agent 比你更清楚。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 理念 ================= -->
+<section class="block alt">
+  <div class="container">
+    <p class="quote reveal" id="quote">
+      "英语学习不该只是<span class="mark">应试导向的背单词</span>。<br>
+      你在生活中遇见的每一个表达，都值得被沉淀下来，<br>
+      成为<span class="mark d1">属于你自己的知识库</span>，并在需要的时候长成真正的语言能力。"
+    </p>
+  </div>
+</section>
+
+<!-- ================= CTA ================= -->
+<div class="cta-band reveal" id="cta">
+  <svg class="raven cta-raven" viewBox="0 0 512 512" aria-hidden="true">
+    <g class="rv-whole">
+      <rect width="512" height="512" rx="115" fill="url(#rvBgGrad)"/>
+      <rect x="96" y="176" width="320" height="280" rx="140" fill="url(#rvBodyGrad)"/>
+      <g class="rv-head">
+        <circle cx="210" cy="160" r="80" fill="url(#rvBodyGrad)"/>
+        <path class="rv-beak" d="M270 110 Q370 70 430 100 Q380 150 280 170 Z" fill="url(#rvBodyGrad)"/>
+        <circle class="rv-eye" cx="210" cy="140" r="12" fill="#00C776"/>
+      </g>
+      <rect class="rv-hollow" x="186" y="256" width="140" height="120" rx="60" fill="#00C776"/>
+    </g>
+  </svg>
+  <h2>从今天的第一个截图开始</h2>
+  <p>把你最近刷到的一条英语表达扔进来，看看会发生什么。</p>
+  <a class="btn btn-primary" href="#">免费开始使用</a>
+</div>
+
+<!-- ================= 页脚 ================= -->
+<footer>
+  <div class="container foot-inner">
+    <a class="logo" href="#">
+      <svg class="raven" viewBox="0 0 512 512" aria-hidden="true">
+        <g class="rv-whole">
+          <rect width="512" height="512" rx="115" fill="url(#rvBgGrad)"/>
+          <rect x="96" y="176" width="320" height="280" rx="140" fill="url(#rvBodyGrad)"/>
+          <g class="rv-head">
+            <circle cx="210" cy="160" r="80" fill="url(#rvBodyGrad)"/>
+            <path class="rv-beak" d="M270 110 Q370 70 430 100 Q380 150 280 170 Z" fill="url(#rvBodyGrad)"/>
+            <circle class="rv-eye" cx="210" cy="140" r="12" fill="#00C776"/>
+          </g>
+          <rect class="rv-hollow" x="186" y="256" width="140" height="120" rx="60" fill="#00C776"/>
+        </g>
+      </svg>
+      <span class="wordmark">语学伴<span class="dot">.</span></span>
+    </a>
+    <div class="foot-links">
+      <a href="#capture">采集</a>
+      <a href="#workflow">工作流</a>
+      <a href="#cards">闪卡</a>
+      <a href="#scenes">场景</a>
+    </div>
+    <div class="copyright">© 2026 语学伴 · 陪你学英语</div>
+  </div>
+</footer>
+
+<script>
+(function () {
+  'use strict';
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var fine = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+
+  /* ============ 1. 灵动切换词：上下翻转 + 高亮扫入 ============ */
+  (function () {
+    var rot = document.getElementById('rotator');
+    if (!rot) return;
+    var items = [].slice.call(rot.querySelectorAll('.rot-item'));
+    if (!items.length) return;
+
+    /* 用最长词撑开容器宽度，避免切换时左右抖动 */
+    function fit() {
+      var max = 0;
+      items.forEach(function (el) {
+        var w = el.getBoundingClientRect().width;
+        if (w > max) max = w;
+      });
+      if (max) rot.style.minWidth = Math.ceil(max) + 'px';
+    }
+
+    var idx = 0, timer = null, started = false;
+    items[0].classList.add('is-in');
+
+    function next() {
+      var cur = items[idx];
+      idx = (idx + 1) % items.length;
+      var nxt = items[idx];
+      cur.classList.remove('is-in');
+      cur.classList.add('is-out');
+      window.setTimeout(function () { cur.classList.remove('is-out'); }, 680);
+      nxt.classList.remove('is-out');
+      nxt.classList.add('is-in');
+    }
+
+    function tick() {
+      window.clearInterval(timer);
+      timer = window.setInterval(next, 2400);
+    }
+
+    function start() {
+      if (started) return;
+      started = true;
+      fit();
+      if (!reduce) tick();
+      window.addEventListener('resize', fit);
+      /* 切到后台时暂停，回来再继续，避免快速连跳 */
+      document.addEventListener('visibilitychange', function () {
+        if (document.hidden) window.clearInterval(timer);
+        else if (!reduce) tick();
+      });
+    }
+
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(start);
+      window.addEventListener('load', start);
+    } else {
+      window.addEventListener('load', start);
+    }
+  })();
+
+  /* ============ 2. 光标聚光（卡片 + 首屏） ============ */
+  if (fine && !reduce) {
+    [].forEach.call(document.querySelectorAll('.card'), function (card) {
+      card.addEventListener('pointermove', function (e) {
+        var r = card.getBoundingClientRect();
+        card.style.setProperty('--mx', (e.clientX - r.left) + 'px');
+        card.style.setProperty('--my', (e.clientY - r.top) + 'px');
+      });
+    });
+    var hero = document.getElementById('hero');
+    var glow = document.getElementById('heroGlow');
+    if (hero && glow) {
+      hero.addEventListener('pointermove', function (e) {
+        var r = hero.getBoundingClientRect();
+        glow.style.setProperty('--gx', (e.clientX - r.left) + 'px');
+        glow.style.setProperty('--gy', (e.clientY - r.top) + 'px');
+      });
+    }
+  }
+
+  /* ============ 3. 滚动：进度条 + 吸顶阴影 + 水印视差 ============ */
+  var nav = document.getElementById('nav');
+  var bar = document.getElementById('navProgress');
+  var wm = document.getElementById('watermark');
+  var ticking = false;
+
+  function onScroll() {
+    if (ticking) return;
+    ticking = true;
+    window.requestAnimationFrame(function () {
+      var y = window.scrollY || document.documentElement.scrollTop;
+      var max = document.documentElement.scrollHeight - window.innerHeight;
+      if (bar) bar.style.transform = 'scaleX(' + (max > 0 ? Math.min(y / max, 1) : 0) + ')';
+      if (nav) nav.classList.toggle('is-stuck', y > 6);
+      if (wm && !reduce && y < 1200) {
+        wm.style.transform = 'rotate(-24deg) translateY(' + (y * 0.07) + 'px)';
+      }
+      ticking = false;
+    });
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+
+  /* ============ 4. 导航高亮当前板块 ============ */
+  (function () {
+    if (!('IntersectionObserver' in window)) return;
+    var links = [].slice.call(document.querySelectorAll('.nav-links a[data-spy]'));
+    if (!links.length) return;
+    var map = {};
+    links.forEach(function (a) { map[a.getAttribute('href').slice(1)] = a; });
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        var a = map[e.target.id];
+        if (a && e.isIntersecting) {
+          links.forEach(function (l) { l.classList.remove('active'); });
+          a.classList.add('active');
+        }
+      });
+    }, { rootMargin: '-45% 0px -50% 0px' });
+    Object.keys(map).forEach(function (id) {
+      var el = document.getElementById(id);
+      if (el) io.observe(el);
+    });
+  })();
+
+  /* ============ 5. 滚动入场（含兜底） ============ */
+  (function () {
+    var els = [].slice.call(document.querySelectorAll('.reveal'));
+    if (!('IntersectionObserver' in window) || reduce) {
+      els.forEach(function (el) { el.classList.add('in'); });
+      return;
+    }
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (!e.isIntersecting) return;
+        var el = e.target;
+        var sibs = el.parentNode ? el.parentNode.children : [el];
+        var i = [].indexOf.call(sibs, el);
+        window.setTimeout(function () { el.classList.add('in'); }, Math.max(i, 0) % 4 * 70);
+        io.unobserve(el);
+      });
+    }, { threshold: .12, rootMargin: '0px 0px -40px 0px' });
+    els.forEach(function (el) { io.observe(el); });
+
+    /* 兜底：3 秒后点亮视口内仍未显示的模块，避免内容永久不可见 */
+    window.setTimeout(function () {
+      els.forEach(function (el) {
+        var r = el.getBoundingClientRect();
+        if (r.top < window.innerHeight && r.bottom > 0) el.classList.add('in');
+      });
+    }, 3000);
+  })();
+
+  /* ============ 6. 闪卡翻转（点击 / 键盘） ============ */
+  [].forEach.call(document.querySelectorAll('.flip'), function (card) {
+    card.addEventListener('click', function () { card.classList.toggle('is-flipped'); });
+    card.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        card.classList.toggle('is-flipped');
+      }
+    });
+  });
+})();
+</script>
+
+</body>
+</html>
