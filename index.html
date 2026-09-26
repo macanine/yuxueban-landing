@@ -20,9 +20,27 @@
 <meta name="twitter:title" content="语学伴 · 陪你学 YouTube / Podcast / Instagram">
 <meta name="twitter:description" content="刷到的、听到的、读到的英语素材，截图、链接、PDF 扔进来就自动记一笔，沉淀为你的个人知识库。">
 <link rel="icon" type="image/svg+xml" href="logo.svg">
-<!-- 现代中文字体：MiSans（小米开源），分片按需加载 -->
+<!-- 现代中文字体：MiSans（小米开源）。
+     自托管子集（见下方 #misans-subset，覆盖页面全部字形，4 个同源请求）优先；
+     CDN 全量分片异步兜底，只为将来新增的字形服务。
+     注意顺序：@font-face 的 unicode-range 重叠时「后声明者胜」，
+     所以子集 <style> 必须排在 CDN <link> 之后 -->
 <link rel="preconnect" href="https://registry.npmmirror.com" crossorigin>
-<link rel="stylesheet" href="fonts/misans.css">
+<link rel="preload" as="font" type="font/woff2" href="fonts/sub-400.woff2" crossorigin>
+<link rel="preload" as="font" type="font/woff2" href="fonts/sub-650.woff2" crossorigin>
+<link rel="preload" as="font" type="font/woff2" href="fonts/sub-700.woff2" crossorigin>
+<link rel="preload" as="font" type="font/woff2" href="fonts/sub-900.woff2" crossorigin>
+<link rel="stylesheet" href="fonts/misans.css" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="fonts/misans.css"></noscript>
+<style id="misans-subset">
+  /* 页面全部字形打包成 4 个 woff2（各 ~52KB）：首屏字体请求从几十个 CDN 分片降到 4 个。
+     ▸ ✅ 和 emoji 不在 MiSans 字库里（unicode-range 已排除），走系统字体，与原先一致。
+     文案改动新增字形时，上方 CDN 分片会自动兜底补字；定期重建子集可收编新字形（见 fonts/README.md） */
+@font-face{font-family:MiSans;font-style:normal;font-weight:400;font-display:swap;src:url(fonts/sub-400.woff2) format("woff2");unicode-range:U+20-7E,U+A9,U+B7,U+D7,U+2013-2014,U+2018-2019,U+201C-201D,U+2026,U+2192,U+2713,U+3001-3002,U+300A-300F,U+4E00,U+4E07,U+4E09-4E0B,U+4E0D-4E0E,U+4E16,U+4E1C,U+4E24,U+4E2A,U+4E2D,U+4E3A-4E3B,U+4E48-4E49,U+4E4B,U+4E5F-4E60,U+4E66,U+4E86,U+4E8B,U+4E8E,U+4E9B,U+4EA4,U+4EA7,U+4EBA,U+4EC0,U+4ECA,U+4ECE,U+4EE5,U+4EEC,U+4EFB,U+4EFD,U+4F1A,U+4F20,U+4F34,U+4F4D,U+4F4F,U+4F53,U+4F55,U+4F5C,U+4F60,U+4F7F,U+4F8B,U+5019,U+503C,U+505C,U+5148,U+514D,U+5165,U+5168,U+516C,U+5171,U+5185,U+518C-518D,U+5199,U+51B2,U+51E0,U+51FA,U+5206,U+520A,U+5212,U+522B,U+5230,U+5237,U+523A,U+524D,U+5251,U+529B,U+52A8,U+5316,U+533A,U+5341,U+5355,U+535A,U+5361,U+5373,U+53BB,U+53D1,U+53D6,U+53D8,U+53E3,U+53E5,U+53EA,U+53EF,U+53F7,U+5404,U+5408,U+540C,U+540E,U+5411,U+5417,U+542C,U+5468,U+548C,U+54C1,U+54EA,U+56DE,U+56FE,U+5728,U+5730,U+573A,U+5747,U+578B,U+57FA,U+5806,U+5883,U+589E,U+5904,U+590D,U+5916,U+591A,U+5927,U+5929,U+5934,U+5957,U+597D,U+59CB,U+5A92,U+5B50,U+5B57,U+5B66,U+5B83,U+5B89,U+5B8C,U+5B9E,U+5BA2,U+5BB9,U+5BF9,U+5BFC,U+5C0F,U+5C11,U+5C31,U+5C5E,U+5DE5,U+5DF1-5DF2,U+5E26,U+5E38,U+5E55,U+5E72,U+5E76,U+5E93-5E94,U+5EA6,U+5F00,U+5F0F,U+5F20,U+5F52,U+5F71,U+5F85,U+5F97,U+5FC3,U+5FD8,U+5FF5,U+601D,U+60AC,U+60C5,U+60F3,U+611F,U+6210-6211,U+6216,U+622A,U+6240,U+624B,U+6253-6254,U+628A,U+6293,U+62C6,U+62DF,U+6301,U+6309,U+6362,U+636E,U+6392,U+63A5,U+63A8,U+63D0,U+6458,U+64AD,U+652F,U+6536,U+6559,U+6563,U+6574,U+6587,U+6599,U+65AD,U+65B0,U+65B9,U+65E0,U+65E5,U+65F6,U+660E,U+662F,U+666F,U+66F4,U+6700,U+6709,U+672C,U+672F,U+673A,U+6750,U+6761,U+6765,U+6790,U+67E5,U+6807,U+6837-6839,U+683C,U+684C,U+6863,U+6865,U+695A,U+6A21,U+6B21,U+6B63,U+6B65,U+6BB5,U+6BCF,U+6BD4,U+6C38,U+6C47,U+6C89,U+6CA1,U+6CD5,U+6CDB,U+6CE8,U+6D3B,U+6D41,U+6DC0,U+6E05,U+6E90,U+6F0F,U+6F14,U+70B9,U+70BC,U+7247-7248,U+7269,U+73B0,U+7406,U+7410,U+751F,U+7528,U+7535,U+754C,U+7684,U+7686,U+76EE,U+76F4,U+76F8,U+770B,U+771F,U+7740,U+7792,U+77E5,U+77ED,U+788E,U+793E,U+79CD,U+79D1-79D2,U+79EF,U+7AE0,U+7AEF,U+7B14,U+7B2C,U+7B49,U+7B7E,U+7B97,U+7BA1,U+7C98,U+7CFB,U+7D20,U+7D2F,U+7E41,U+7EB2,U+7EC3,U+7EC8,U+7ED9,U+7EDF,U+7EF4,U+7F29,U+7F51,U+7FFB,U+8003,U+800C,U+805A,U+80CC,U+80FD,U+8111,U+8131,U+81EA,U+82B1,U+82F1,U+8303,U+843D,U+85CF,U+884C,U+8868,U+88AB,U+897F,U+8981,U+89C1,U+89C4,U+89C6,U+89C9,U+89D2,U+89E3,U+8A00,U+8BA4,U+8BA9,U+8BAD,U+8BB0,U+8BB2,U+8BBA,U+8BC1,U+8BC6,U+8BCD,U+8BD5,U+8BDD,U+8BE5,U+8BED,U+8BF4,U+8BFB,U+8C61,U+8D1F,U+8D23,U+8D26,U+8D34,U+8D39,U+8D44,U+8D5E,U+8D70,U+8D77,U+8DF3,U+8F6C,U+8F7B,U+8F7D,U+8FBE,U+8FC7,U+8FD1,U+8FD8-8FD9,U+8FDB-8FDC,U+9010,U+9012,U+9047,U+9053,U+90E8,U+90FD,U+91C7,U+91CA,U+91CC-91CD,U+949F,U+94FE,U+957F,U+95EA,U+95EE,U+95F4,U+9605,U+9644,U+966A,U+968F,U+9694,U+96BE,U+96C5-96C6,U+9700,U+9762,U+97F3,U+9875-9876,U+9891,U+9898,U+9A71,U+9AD8,U+9ED8,U+9F50,U+FF01,U+FF08-FF09,U+FF0C,U+FF1A-FF1B,U+FF1F;}
+  @font-face{font-family:MiSans;font-style:normal;font-weight:650;font-display:swap;src:url(fonts/sub-650.woff2) format("woff2");unicode-range:U+20-7E,U+A9,U+B7,U+D7,U+2013-2014,U+2018-2019,U+201C-201D,U+2026,U+2192,U+2713,U+3001-3002,U+300A-300F,U+4E00,U+4E07,U+4E09-4E0B,U+4E0D-4E0E,U+4E16,U+4E1C,U+4E24,U+4E2A,U+4E2D,U+4E3A-4E3B,U+4E48-4E49,U+4E4B,U+4E5F-4E60,U+4E66,U+4E86,U+4E8B,U+4E8E,U+4E9B,U+4EA4,U+4EA7,U+4EBA,U+4EC0,U+4ECA,U+4ECE,U+4EE5,U+4EEC,U+4EFB,U+4EFD,U+4F1A,U+4F20,U+4F34,U+4F4D,U+4F4F,U+4F53,U+4F55,U+4F5C,U+4F60,U+4F7F,U+4F8B,U+5019,U+503C,U+505C,U+5148,U+514D,U+5165,U+5168,U+516C,U+5171,U+5185,U+518C-518D,U+5199,U+51B2,U+51E0,U+51FA,U+5206,U+520A,U+5212,U+522B,U+5230,U+5237,U+523A,U+524D,U+5251,U+529B,U+52A8,U+5316,U+533A,U+5341,U+5355,U+535A,U+5361,U+5373,U+53BB,U+53D1,U+53D6,U+53D8,U+53E3,U+53E5,U+53EA,U+53EF,U+53F7,U+5404,U+5408,U+540C,U+540E,U+5411,U+5417,U+542C,U+5468,U+548C,U+54C1,U+54EA,U+56DE,U+56FE,U+5728,U+5730,U+573A,U+5747,U+578B,U+57FA,U+5806,U+5883,U+589E,U+5904,U+590D,U+5916,U+591A,U+5927,U+5929,U+5934,U+5957,U+597D,U+59CB,U+5A92,U+5B50,U+5B57,U+5B66,U+5B83,U+5B89,U+5B8C,U+5B9E,U+5BA2,U+5BB9,U+5BF9,U+5BFC,U+5C0F,U+5C11,U+5C31,U+5C5E,U+5DE5,U+5DF1-5DF2,U+5E26,U+5E38,U+5E55,U+5E72,U+5E76,U+5E93-5E94,U+5EA6,U+5F00,U+5F0F,U+5F20,U+5F52,U+5F71,U+5F85,U+5F97,U+5FC3,U+5FD8,U+5FF5,U+601D,U+60AC,U+60C5,U+60F3,U+611F,U+6210-6211,U+6216,U+622A,U+6240,U+624B,U+6253-6254,U+628A,U+6293,U+62C6,U+62DF,U+6301,U+6309,U+6362,U+636E,U+6392,U+63A5,U+63A8,U+63D0,U+6458,U+64AD,U+652F,U+6536,U+6559,U+6563,U+6574,U+6587,U+6599,U+65AD,U+65B0,U+65B9,U+65E0,U+65E5,U+65F6,U+660E,U+662F,U+666F,U+66F4,U+6700,U+6709,U+672C,U+672F,U+673A,U+6750,U+6761,U+6765,U+6790,U+67E5,U+6807,U+6837-6839,U+683C,U+684C,U+6863,U+6865,U+695A,U+6A21,U+6B21,U+6B63,U+6B65,U+6BB5,U+6BCF,U+6BD4,U+6C38,U+6C47,U+6C89,U+6CA1,U+6CD5,U+6CDB,U+6CE8,U+6D3B,U+6D41,U+6DC0,U+6E05,U+6E90,U+6F0F,U+6F14,U+70B9,U+70BC,U+7247-7248,U+7269,U+73B0,U+7406,U+7410,U+751F,U+7528,U+7535,U+754C,U+7684,U+7686,U+76EE,U+76F4,U+76F8,U+770B,U+771F,U+7740,U+7792,U+77E5,U+77ED,U+788E,U+793E,U+79CD,U+79D1-79D2,U+79EF,U+7AE0,U+7AEF,U+7B14,U+7B2C,U+7B49,U+7B7E,U+7B97,U+7BA1,U+7C98,U+7CFB,U+7D20,U+7D2F,U+7E41,U+7EB2,U+7EC3,U+7EC8,U+7ED9,U+7EDF,U+7EF4,U+7F29,U+7F51,U+7FFB,U+8003,U+800C,U+805A,U+80CC,U+80FD,U+8111,U+8131,U+81EA,U+82B1,U+82F1,U+8303,U+843D,U+85CF,U+884C,U+8868,U+88AB,U+897F,U+8981,U+89C1,U+89C4,U+89C6,U+89C9,U+89D2,U+89E3,U+8A00,U+8BA4,U+8BA9,U+8BAD,U+8BB0,U+8BB2,U+8BBA,U+8BC1,U+8BC6,U+8BCD,U+8BD5,U+8BDD,U+8BE5,U+8BED,U+8BF4,U+8BFB,U+8C61,U+8D1F,U+8D23,U+8D26,U+8D34,U+8D39,U+8D44,U+8D5E,U+8D70,U+8D77,U+8DF3,U+8F6C,U+8F7B,U+8F7D,U+8FBE,U+8FC7,U+8FD1,U+8FD8-8FD9,U+8FDB-8FDC,U+9010,U+9012,U+9047,U+9053,U+90E8,U+90FD,U+91C7,U+91CA,U+91CC-91CD,U+949F,U+94FE,U+957F,U+95EA,U+95EE,U+95F4,U+9605,U+9644,U+966A,U+968F,U+9694,U+96BE,U+96C5-96C6,U+9700,U+9762,U+97F3,U+9875-9876,U+9891,U+9898,U+9A71,U+9AD8,U+9ED8,U+9F50,U+FF01,U+FF08-FF09,U+FF0C,U+FF1A-FF1B,U+FF1F;}
+  @font-face{font-family:MiSans;font-style:normal;font-weight:700;font-display:swap;src:url(fonts/sub-700.woff2) format("woff2");unicode-range:U+20-7E,U+A9,U+B7,U+D7,U+2013-2014,U+2018-2019,U+201C-201D,U+2026,U+2192,U+2713,U+3001-3002,U+300A-300F,U+4E00,U+4E07,U+4E09-4E0B,U+4E0D-4E0E,U+4E16,U+4E1C,U+4E24,U+4E2A,U+4E2D,U+4E3A-4E3B,U+4E48-4E49,U+4E4B,U+4E5F-4E60,U+4E66,U+4E86,U+4E8B,U+4E8E,U+4E9B,U+4EA4,U+4EA7,U+4EBA,U+4EC0,U+4ECA,U+4ECE,U+4EE5,U+4EEC,U+4EFB,U+4EFD,U+4F1A,U+4F20,U+4F34,U+4F4D,U+4F4F,U+4F53,U+4F55,U+4F5C,U+4F60,U+4F7F,U+4F8B,U+5019,U+503C,U+505C,U+5148,U+514D,U+5165,U+5168,U+516C,U+5171,U+5185,U+518C-518D,U+5199,U+51B2,U+51E0,U+51FA,U+5206,U+520A,U+5212,U+522B,U+5230,U+5237,U+523A,U+524D,U+5251,U+529B,U+52A8,U+5316,U+533A,U+5341,U+5355,U+535A,U+5361,U+5373,U+53BB,U+53D1,U+53D6,U+53D8,U+53E3,U+53E5,U+53EA,U+53EF,U+53F7,U+5404,U+5408,U+540C,U+540E,U+5411,U+5417,U+542C,U+5468,U+548C,U+54C1,U+54EA,U+56DE,U+56FE,U+5728,U+5730,U+573A,U+5747,U+578B,U+57FA,U+5806,U+5883,U+589E,U+5904,U+590D,U+5916,U+591A,U+5927,U+5929,U+5934,U+5957,U+597D,U+59CB,U+5A92,U+5B50,U+5B57,U+5B66,U+5B83,U+5B89,U+5B8C,U+5B9E,U+5BA2,U+5BB9,U+5BF9,U+5BFC,U+5C0F,U+5C11,U+5C31,U+5C5E,U+5DE5,U+5DF1-5DF2,U+5E26,U+5E38,U+5E55,U+5E72,U+5E76,U+5E93-5E94,U+5EA6,U+5F00,U+5F0F,U+5F20,U+5F52,U+5F71,U+5F85,U+5F97,U+5FC3,U+5FD8,U+5FF5,U+601D,U+60AC,U+60C5,U+60F3,U+611F,U+6210-6211,U+6216,U+622A,U+6240,U+624B,U+6253-6254,U+628A,U+6293,U+62C6,U+62DF,U+6301,U+6309,U+6362,U+636E,U+6392,U+63A5,U+63A8,U+63D0,U+6458,U+64AD,U+652F,U+6536,U+6559,U+6563,U+6574,U+6587,U+6599,U+65AD,U+65B0,U+65B9,U+65E0,U+65E5,U+65F6,U+660E,U+662F,U+666F,U+66F4,U+6700,U+6709,U+672C,U+672F,U+673A,U+6750,U+6761,U+6765,U+6790,U+67E5,U+6807,U+6837-6839,U+683C,U+684C,U+6863,U+6865,U+695A,U+6A21,U+6B21,U+6B63,U+6B65,U+6BB5,U+6BCF,U+6BD4,U+6C38,U+6C47,U+6C89,U+6CA1,U+6CD5,U+6CDB,U+6CE8,U+6D3B,U+6D41,U+6DC0,U+6E05,U+6E90,U+6F0F,U+6F14,U+70B9,U+70BC,U+7247-7248,U+7269,U+73B0,U+7406,U+7410,U+751F,U+7528,U+7535,U+754C,U+7684,U+7686,U+76EE,U+76F4,U+76F8,U+770B,U+771F,U+7740,U+7792,U+77E5,U+77ED,U+788E,U+793E,U+79CD,U+79D1-79D2,U+79EF,U+7AE0,U+7AEF,U+7B14,U+7B2C,U+7B49,U+7B7E,U+7B97,U+7BA1,U+7C98,U+7CFB,U+7D20,U+7D2F,U+7E41,U+7EB2,U+7EC3,U+7EC8,U+7ED9,U+7EDF,U+7EF4,U+7F29,U+7F51,U+7FFB,U+8003,U+800C,U+805A,U+80CC,U+80FD,U+8111,U+8131,U+81EA,U+82B1,U+82F1,U+8303,U+843D,U+85CF,U+884C,U+8868,U+88AB,U+897F,U+8981,U+89C1,U+89C4,U+89C6,U+89C9,U+89D2,U+89E3,U+8A00,U+8BA4,U+8BA9,U+8BAD,U+8BB0,U+8BB2,U+8BBA,U+8BC1,U+8BC6,U+8BCD,U+8BD5,U+8BDD,U+8BE5,U+8BED,U+8BF4,U+8BFB,U+8C61,U+8D1F,U+8D23,U+8D26,U+8D34,U+8D39,U+8D44,U+8D5E,U+8D70,U+8D77,U+8DF3,U+8F6C,U+8F7B,U+8F7D,U+8FBE,U+8FC7,U+8FD1,U+8FD8-8FD9,U+8FDB-8FDC,U+9010,U+9012,U+9047,U+9053,U+90E8,U+90FD,U+91C7,U+91CA,U+91CC-91CD,U+949F,U+94FE,U+957F,U+95EA,U+95EE,U+95F4,U+9605,U+9644,U+966A,U+968F,U+9694,U+96BE,U+96C5-96C6,U+9700,U+9762,U+97F3,U+9875-9876,U+9891,U+9898,U+9A71,U+9AD8,U+9ED8,U+9F50,U+FF01,U+FF08-FF09,U+FF0C,U+FF1A-FF1B,U+FF1F;}
+  @font-face{font-family:MiSans;font-style:normal;font-weight:900;font-display:swap;src:url(fonts/sub-900.woff2) format("woff2");unicode-range:U+20-7E,U+A9,U+B7,U+D7,U+2013-2014,U+2018-2019,U+201C-201D,U+2026,U+2192,U+2713,U+3001-3002,U+300A-300F,U+4E00,U+4E07,U+4E09-4E0B,U+4E0D-4E0E,U+4E16,U+4E1C,U+4E24,U+4E2A,U+4E2D,U+4E3A-4E3B,U+4E48-4E49,U+4E4B,U+4E5F-4E60,U+4E66,U+4E86,U+4E8B,U+4E8E,U+4E9B,U+4EA4,U+4EA7,U+4EBA,U+4EC0,U+4ECA,U+4ECE,U+4EE5,U+4EEC,U+4EFB,U+4EFD,U+4F1A,U+4F20,U+4F34,U+4F4D,U+4F4F,U+4F53,U+4F55,U+4F5C,U+4F60,U+4F7F,U+4F8B,U+5019,U+503C,U+505C,U+5148,U+514D,U+5165,U+5168,U+516C,U+5171,U+5185,U+518C-518D,U+5199,U+51B2,U+51E0,U+51FA,U+5206,U+520A,U+5212,U+522B,U+5230,U+5237,U+523A,U+524D,U+5251,U+529B,U+52A8,U+5316,U+533A,U+5341,U+5355,U+535A,U+5361,U+5373,U+53BB,U+53D1,U+53D6,U+53D8,U+53E3,U+53E5,U+53EA,U+53EF,U+53F7,U+5404,U+5408,U+540C,U+540E,U+5411,U+5417,U+542C,U+5468,U+548C,U+54C1,U+54EA,U+56DE,U+56FE,U+5728,U+5730,U+573A,U+5747,U+578B,U+57FA,U+5806,U+5883,U+589E,U+5904,U+590D,U+5916,U+591A,U+5927,U+5929,U+5934,U+5957,U+597D,U+59CB,U+5A92,U+5B50,U+5B57,U+5B66,U+5B83,U+5B89,U+5B8C,U+5B9E,U+5BA2,U+5BB9,U+5BF9,U+5BFC,U+5C0F,U+5C11,U+5C31,U+5C5E,U+5DE5,U+5DF1-5DF2,U+5E26,U+5E38,U+5E55,U+5E72,U+5E76,U+5E93-5E94,U+5EA6,U+5F00,U+5F0F,U+5F20,U+5F52,U+5F71,U+5F85,U+5F97,U+5FC3,U+5FD8,U+5FF5,U+601D,U+60AC,U+60C5,U+60F3,U+611F,U+6210-6211,U+6216,U+622A,U+6240,U+624B,U+6253-6254,U+628A,U+6293,U+62C6,U+62DF,U+6301,U+6309,U+6362,U+636E,U+6392,U+63A5,U+63A8,U+63D0,U+6458,U+64AD,U+652F,U+6536,U+6559,U+6563,U+6574,U+6587,U+6599,U+65AD,U+65B0,U+65B9,U+65E0,U+65E5,U+65F6,U+660E,U+662F,U+666F,U+66F4,U+6700,U+6709,U+672C,U+672F,U+673A,U+6750,U+6761,U+6765,U+6790,U+67E5,U+6807,U+6837-6839,U+683C,U+684C,U+6863,U+6865,U+695A,U+6A21,U+6B21,U+6B63,U+6B65,U+6BB5,U+6BCF,U+6BD4,U+6C38,U+6C47,U+6C89,U+6CA1,U+6CD5,U+6CDB,U+6CE8,U+6D3B,U+6D41,U+6DC0,U+6E05,U+6E90,U+6F0F,U+6F14,U+70B9,U+70BC,U+7247-7248,U+7269,U+73B0,U+7406,U+7410,U+751F,U+7528,U+7535,U+754C,U+7684,U+7686,U+76EE,U+76F4,U+76F8,U+770B,U+771F,U+7740,U+7792,U+77E5,U+77ED,U+788E,U+793E,U+79CD,U+79D1-79D2,U+79EF,U+7AE0,U+7AEF,U+7B14,U+7B2C,U+7B49,U+7B7E,U+7B97,U+7BA1,U+7C98,U+7CFB,U+7D20,U+7D2F,U+7E41,U+7EB2,U+7EC3,U+7EC8,U+7ED9,U+7EDF,U+7EF4,U+7F29,U+7F51,U+7FFB,U+8003,U+800C,U+805A,U+80CC,U+80FD,U+8111,U+8131,U+81EA,U+82B1,U+82F1,U+8303,U+843D,U+85CF,U+884C,U+8868,U+88AB,U+897F,U+8981,U+89C1,U+89C4,U+89C6,U+89C9,U+89D2,U+89E3,U+8A00,U+8BA4,U+8BA9,U+8BAD,U+8BB0,U+8BB2,U+8BBA,U+8BC1,U+8BC6,U+8BCD,U+8BD5,U+8BDD,U+8BE5,U+8BED,U+8BF4,U+8BFB,U+8C61,U+8D1F,U+8D23,U+8D26,U+8D34,U+8D39,U+8D44,U+8D5E,U+8D70,U+8D77,U+8DF3,U+8F6C,U+8F7B,U+8F7D,U+8FBE,U+8FC7,U+8FD1,U+8FD8-8FD9,U+8FDB-8FDC,U+9010,U+9012,U+9047,U+9053,U+90E8,U+90FD,U+91C7,U+91CA,U+91CC-91CD,U+949F,U+94FE,U+957F,U+95EA,U+95EE,U+95F4,U+9605,U+9644,U+966A,U+968F,U+9694,U+96BE,U+96C5-96C6,U+9700,U+9762,U+97F3,U+9875-9876,U+9891,U+9898,U+9A71,U+9AD8,U+9ED8,U+9F50,U+FF01,U+FF08-FF09,U+FF0C,U+FF1A-FF1B,U+FF1F;}
+</style>
 <!-- 无 JS / JS 失败时也要保证内容可见（.reveal 与轮播全靠脚本点亮） -->
 <noscript><style>
   .reveal { opacity: 1 !important; transform: none !important; }
@@ -31,6 +49,8 @@
   .rot-item:not(:first-child) { display: none !important; }
   .rot-item::before { transform: scaleX(1) !important; }
   .rotator { height: auto !important; }
+  .marquee-track { animation: none !important; }
+  .flow-num { transform: rotate(-6deg) !important; }
 </style></noscript>
 <style>
   /* ============================================================
@@ -51,6 +71,10 @@
     --bg-soft: #FAFAFA;
     --ease-out: cubic-bezier(.22, 1, .36, 1);
     --ease-soft: cubic-bezier(.4, .2, .2, 1);
+    --spring: cubic-bezier(.34, 1.56, .64, 1);
+    --shadow-lg: 0 2px 6px rgba(17,17,17,.04), 0 26px 64px -18px rgba(17,17,17,.16);
+    --shadow-green: 0 12px 30px -6px rgba(0,199,118,.4);
+    --sec-pad: clamp(72px, 9vw, 108px);
     --shell: 1120px;
     /* 现代中文字体栈：MiSans 优先，逐级降级到各平台自带现代中文字体 */
     --font-sans: "MiSans", "HarmonyOS Sans SC", "HarmonyOS Sans", "PingFang SC",
@@ -65,7 +89,6 @@
     background: var(--bg);
     line-height: 1.6;
     -webkit-font-smoothing: antialiased;
-    text-rendering: optimizeLegibility;
     overflow-x: hidden;
   }
   a { text-decoration: none; color: inherit; }
@@ -80,9 +103,11 @@
   :focus-visible { outline: 2.5px solid var(--green); outline-offset: 3px; border-radius: 6px; }
   ::selection { background: rgba(0,199,118,.2); }
   a, button, summary { -webkit-tap-highlight-color: transparent; }
-  section[id], header[id], div[id] { scroll-margin-top: 82px; }
+  section[id], header[id], div[id], p[id] { scroll-margin-top: 82px; }
   h1, h2, h3, h4 { text-wrap: balance; }
   p { text-wrap: pretty; }
+  /* 移动端专用断行：窄屏一句一行，桌面视口不生效 */
+  .br-m { display: none; }
   .skip-link {
     position: fixed; left: 50%; top: -70px; z-index: 300;
     transform: translateX(-50%);
@@ -109,7 +134,7 @@
     -webkit-backdrop-filter: saturate(180%) blur(16px);
     transition: border-color .3s, box-shadow .3s;
   }
-  .nav.is-stuck { border-bottom: 1px solid var(--border); box-shadow: 0 6px 24px rgba(17,17,17,.05); }
+  .nav.is-stuck { border-bottom: 1px solid var(--border); box-shadow: 0 8px 30px rgba(17,17,17,.06); }
   .nav-inner { display: flex; align-items: center; justify-content: space-between; gap: 20px; height: 64px; }
   .logo {
     display: inline-flex; align-items: center; gap: 10px;
@@ -117,7 +142,7 @@
   }
   .logo .wordmark { display: inline-flex; align-items: baseline; }
   .logo .dot { color: var(--green); margin-left: -.08em; }
-  .logo .raven { width: 30px; height: 30px; flex: none; border-radius: 9px; transition: transform .4s var(--ease-out); }
+  .logo .raven { width: 30px; height: 30px; flex: none; border-radius: 9px; transition: transform .5s var(--spring); }
   .logo:hover .raven { transform: rotate(-10deg) scale(1.1); }
   .nav-links { display: flex; gap: 36px; font-size: 15px; font-weight: 600; }
   .nav-links a { position: relative; padding: 4px 0; color: var(--ink); transition: color .25s; }
@@ -228,10 +253,28 @@
       linear-gradient(115deg, transparent 49.92%, rgba(0,0,0,.042) 50%, transparent 50.08%) -140px 0 / 460px 460px,
       linear-gradient(115deg, transparent 49.94%, rgba(0,199,118,.13) 50%, transparent 50.06%) -140px 0 / 460px 460px;
   }
-  /* 光标跟随柔光 */
+  /* 环境光斑：缓慢漂移，让首屏「活」起来（纯 transform，走合成层）。
+     限定高度而非铺满全 hero——hero 连 mockup 一起高达 ~2600px，
+     铺满会让这张合成层在 2x 屏吃掉 ~86MB 显存 */
+  .hero::after {
+    content: ""; position: absolute; left: -4%; right: -4%; top: -3%; height: 2300px; pointer-events: none;
+    background:
+      radial-gradient(460px 320px at 14% 92%, rgba(0,199,118,.13), transparent 66%),
+      radial-gradient(520px 340px at 86% 8%, rgba(53,216,148,.15), transparent 66%);
+    animation: aurora 16s ease-in-out infinite alternate;
+  }
+  @keyframes aurora {
+    from { transform: translate3d(-2.5%, -1.5%, 0) scale(1); }
+    to { transform: translate3d(2.5%, 2%, 0) scale(1.07); }
+  }
+  /* 光标跟随柔光：固定尺寸圆斑用 transform 跟手（纯合成层移动），
+     不改背景位置——否则鼠标每动一帧都要重绘整个 hero */
   .hero-glow {
-    position: absolute; inset: 0; z-index: 0; pointer-events: none;
-    background: radial-gradient(320px circle at var(--gx, 50%) var(--gy, 18%), rgba(0,199,118,.11), transparent 70%);
+    position: absolute; left: 0; top: 0; z-index: 0; pointer-events: none;
+    width: 700px; height: 700px; margin: -350px 0 0 -350px;
+    background: radial-gradient(closest-side, rgba(0,199,118,.11), transparent 70%);
+    transform: translate3d(var(--gx, 45vw), var(--gy, 220px), 0);
+    will-change: transform;
     opacity: 0; transition: opacity .5s;
   }
   .hero:hover .hero-glow { opacity: 1; }
@@ -244,6 +287,18 @@
     user-select: none; pointer-events: none;
   }
   .watermark .wm-green { color: #DFF6EC; }
+  /* 滚动视差交给 CSS 滚动时间线（不支持的浏览器保持静态，零副作用） */
+  @supports (animation-timeline: scroll()) {
+    .watermark {
+      animation: wmPar 1s linear both;
+      animation-timeline: scroll(root);
+      animation-range: 0px 900px;
+    }
+    @keyframes wmPar {
+      from { transform: rotate(-24deg) translate3d(0, 0, 0); }
+      to { transform: rotate(-24deg) translate3d(0, -110px, 0); }
+    }
+  }
 
   .hero-inner { position: relative; z-index: 1; text-align: center; }
 
@@ -266,8 +321,8 @@
 
   .hero-title {
     display: flex; flex-direction: column; align-items: center; gap: 6px;
-    font-size: clamp(30px, 7.4vw, 60px);
-    font-weight: 900; letter-spacing: -.02em; line-height: 1.18;
+    font-size: clamp(31px, 7.4vw, 64px);
+    font-weight: 900; letter-spacing: -.022em; line-height: 1.16;
     animation: floaty 7s ease-in-out infinite alternate;
   }
   @keyframes floaty { from { transform: translateY(0); } to { transform: translateY(-7px); } }
@@ -285,7 +340,7 @@
   .rot-item {
     position: absolute; left: 50%; top: 0; white-space: nowrap;
     padding: 0 .06em;
-    transform: translate(-50%, 108%);
+    transform: translate(-50%, 108%) scale(.96);
     opacity: 0; filter: blur(5px);
     transition: transform .66s var(--ease-out), opacity .44s ease, filter .44s ease;
     will-change: transform, opacity;
@@ -297,10 +352,10 @@
     transform: scaleX(0); transform-origin: left center;
     transition: transform .55s var(--ease-out);
   }
-  .rot-item.is-in { transform: translate(-50%, 0); opacity: 1; filter: blur(0); z-index: 2; }
+  .rot-item.is-in { transform: translate(-50%, 0) scale(1); opacity: 1; filter: blur(0); z-index: 2; }
   .rot-item.is-in::before { transform: scaleX(1); }
   .rot-item.is-out {
-    transform: translate(-50%, -108%); opacity: 0; filter: blur(5px);
+    transform: translate(-50%, -108%) scale(.96); opacity: 0; filter: blur(5px);
     transition-duration: .5s; z-index: 1;
   }
 
@@ -316,8 +371,16 @@
     padding: 14px 32px; border-radius: 11px; font-size: 15.5px; font-weight: 600;
     transition: transform .2s var(--ease-out), box-shadow .25s, background .25s, color .25s;
   }
-  .btn-primary { background: var(--green); color: #fff; box-shadow: 0 10px 26px rgba(0,199,118,.3); }
-  .btn-primary:hover { background: var(--green-deep); transform: translateY(-2px); box-shadow: 0 14px 34px rgba(0,199,118,.36); }
+  .btn-primary {
+    background: linear-gradient(165deg, #2BD98F, var(--green) 55%, #00BE6E);
+    color: #fff;
+    box-shadow: var(--shadow-green), inset 0 1px 0 rgba(255,255,255,.3);
+  }
+  .btn-primary:hover {
+    background: linear-gradient(165deg, #24D489, var(--green-deep) 60%, #00A55F);
+    transform: translateY(-2px);
+    box-shadow: 0 16px 36px -6px rgba(0,199,118,.48), inset 0 1px 0 rgba(255,255,255,.3);
+  }
   .btn-outline { background: #fff; color: var(--green-deep); border: 1.5px solid var(--green); }
   .btn-outline:hover { background: var(--green-soft); transform: translateY(-2px); }
   /* 按钮扫光 */
@@ -339,7 +402,7 @@
   /* 首屏入场错峰 */
   .anim { animation: riseIn .85s var(--ease-out) both; animation-delay: var(--d, 0s); }
   @keyframes riseIn {
-    from { opacity: 0; transform: translateY(26px); }
+    from { opacity: 0; transform: translateY(30px) scale(.985); }
     to { opacity: 1; transform: none; }
   }
 
@@ -347,6 +410,12 @@
      产品界面示意（侧栏 / 对话 / 闪卡）
      ============================================================ */
   .mockup-wrap { position: relative; z-index: 1; max-width: 960px; margin: 68px auto 0; padding: 0 24px; }
+  /* 窗口底下的环境绿晕：产品浮起来的底气 */
+  .mockup-wrap::before {
+    content: ""; position: absolute; z-index: -1; left: 6%; right: 6%; top: 18%; bottom: -10%;
+    background: radial-gradient(58% 52% at 50% 46%, rgba(0,199,118,.14), transparent 72%);
+    pointer-events: none;
+  }
 
   /* 首屏：渡鸦栖息在应用窗口右上角，闪卡飞入腹中口袋 */
   .hero-raven {
@@ -378,8 +447,8 @@
   }
   .mockup {
     background: #fff; border: 1px solid var(--border);
-    border-radius: 18px; overflow: hidden; text-align: left;
-    box-shadow: 0 2px 6px rgba(17,17,17,.03), 0 26px 70px rgba(17,17,17,.10);
+    border-radius: 20px; overflow: hidden; text-align: left;
+    box-shadow: var(--shadow-lg);
   }
   .mockup-bar {
     display: flex; align-items: center; gap: 8px;
@@ -413,6 +482,9 @@
   .ring { position: relative; width: 38px; height: 38px; flex: none; }
   .ring svg { transform: rotate(-90deg); }
   .ring .ring-num { position: absolute; inset: 0; display: grid; place-items: center; font-size: 10.5px; font-weight: 700; color: var(--green-deep); }
+  /* 复习环：示意窗进入视口后从 0 扫到 68%（JS 挂 .counters-go） */
+  .ring .ring-fg { transition: stroke-dashoffset 1.4s var(--ease-out) .25s; }
+  .counters-go .ring-fg { stroke-dashoffset: 31; }
   .mk-progress .txt { font-size: 11.5px; color: var(--ink-3); line-height: 1.5; }
 
   .chat { padding: 26px 22px; display: flex; flex-direction: column; gap: 14px; }
@@ -492,7 +564,7 @@
   /* ============================================================
      板块通用
      ============================================================ */
-  section.block { position: relative; padding: 100px 0 84px; }
+  section.block { position: relative; padding: var(--sec-pad) 0 calc(var(--sec-pad) - 20px); }
   section.block.alt { background: var(--bg-soft); }
   .dots-orn {
     position: absolute; width: 210px; height: 150px; pointer-events: none; opacity: .55;
@@ -511,7 +583,7 @@
     color: var(--green-deep); text-transform: uppercase; margin-bottom: 16px;
   }
   .sec-eyebrow::before, .sec-eyebrow::after { content: ""; width: 22px; height: 1px; background: rgba(0,199,118,.45); }
-  .sec-head h2 { font-size: clamp(26px, 4.4vw, 40px); font-weight: 900; letter-spacing: -.02em; line-height: 1.25; }
+  .sec-head h2 { font-size: clamp(27px, 4.6vw, 42px); font-weight: 900; letter-spacing: -.022em; line-height: 1.24; }
   .sec-head h2 .hl { color: var(--green); }
   .sec-head p { margin-top: 16px; color: var(--ink-2); font-size: 16px; }
 
@@ -521,14 +593,18 @@
 
   .card {
     position: relative; overflow: hidden;
-    background: #fff; border: 1px solid var(--border); border-radius: 16px;
-    padding: 30px 26px;
+    background: #fff; border: 1px solid var(--border); border-radius: 18px;
+    padding: 32px 28px;
     transition: transform .34s var(--ease-out), box-shadow .34s, border-color .34s;
   }
-  /* 光标聚光 */
+  /* 光标聚光：固定尺寸圆斑随 transform 移动，hover 时不再逐帧整卡重绘 */
   .card::before {
-    content: ""; position: absolute; inset: 0; opacity: 0; transition: opacity .35s;
-    background: radial-gradient(260px circle at var(--mx, 50%) var(--my, 50%), rgba(0,199,118,.10), transparent 64%);
+    content: ""; position: absolute; left: -260px; top: -260px;
+    width: 520px; height: 520px; pointer-events: none;
+    background: radial-gradient(closest-side, rgba(0,199,118,.10), transparent 64%);
+    transform: translate3d(var(--mx, 50%), var(--my, 50%), 0);
+    will-change: transform;
+    opacity: 0; transition: opacity .35s;
   }
   /* 顶部渐变细线滑入 */
   .card::after {
@@ -536,7 +612,8 @@
     background: linear-gradient(90deg, var(--green), rgba(0,199,118,0));
     transform: scaleX(0); transform-origin: left; transition: transform .4s var(--ease-out);
   }
-  .card:hover { transform: translateY(-5px); box-shadow: 0 18px 44px rgba(17,17,17,.08); border-color: #E0E0E0; }
+  /* .grid 前缀抬一级优先级：hover 位移不被 .reveal.in { transform:none } 覆盖 */
+  .grid .card:hover { transform: translateY(-5px); box-shadow: var(--shadow-lg); border-color: #E3E6E4; }
   .card:hover::before { opacity: 1; }
   .card:hover::after { transform: scaleX(1); }
   .card > * { position: relative; z-index: 1; }
@@ -568,8 +645,10 @@
     width: 26px; height: 26px; margin: 0 auto 12px; border-radius: 8px;
     background: var(--green); color: #fff; font-size: 13px; font-weight: 900;
     display: grid; place-items: center; transform: rotate(-6deg);
-    transition: transform .3s var(--ease-out);
+    transition: transform .55s var(--spring);
   }
+  /* 入场前缩到 0，随 .in 一起弹出 */
+  .reveal:not(.in) .flow-num { transform: rotate(-6deg) scale(0); }
   .flow-step:hover .flow-num { transform: rotate(0) scale(1.1); }
   .flow-step h3 { font-size: 18px; font-weight: 800; margin-bottom: 8px; }
   .flow-step p { font-size: 14.5px; color: var(--ink-2); max-width: 290px; margin: 0 auto; }
@@ -599,7 +678,10 @@
   .flip {
     position: relative; height: 216px; border-radius: 16px;
     perspective: 1400px; cursor: pointer; outline: none;
+    transition: transform .35s var(--ease-out);
   }
+  /* 提升一级优先级：否则会被后面的 .reveal.in { transform:none } 压住 */
+  .grid .flip:hover { transform: translateY(-4px); }
   .flip-inner {
     position: relative; width: 100%; height: 100%;
     transform-style: preserve-3d;
@@ -641,7 +723,7 @@
      ============================================================ */
   .quote {
     max-width: 800px; margin: 0 auto; text-align: center;
-    font-size: clamp(19px, 2.7vw, 26px); font-weight: 700;
+    font-size: clamp(20px, 2.8vw, 27px); font-weight: 700;
     line-height: 1.85; letter-spacing: -.01em;
   }
   .mark {
@@ -662,8 +744,10 @@
      ============================================================ */
   .cta-band {
     position: relative; overflow: hidden; text-align: center;
-    margin: 0 24px 96px; padding: 78px 32px; border-radius: 26px;
-    background: linear-gradient(180deg, #F7FEFB 0%, #E8FBF2 100%);
+    margin: 0 24px 96px; padding: 78px 32px; border-radius: 28px;
+    background:
+      radial-gradient(640px 300px at 84% -10%, rgba(53,216,148,.22), transparent 62%),
+      linear-gradient(180deg, #F7FEFB 0%, #E8FBF2 100%);
     border: 1px solid rgba(0,199,118,.18);
   }
   /* 斜纹用 transform 漂移（走合成层，不每帧重绘背景），
@@ -707,11 +791,11 @@
     background: linear-gradient(180deg, #F8FEFB, #ECFCF4);
     box-shadow: 0 16px 40px rgba(0,199,118,.10);
   }
-  .cmp-col:hover { transform: translateY(-4px); }
+  .cmp .cmp-col:hover { transform: translateY(-4px); }
   .cmp-head { display: flex; align-items: center; gap: 11px; margin-bottom: 20px; }
   .cmp-badge { width: 34px; height: 34px; border-radius: 10px; display: grid; place-items: center; flex: none; }
   .cmp-col.before .cmp-badge { background: #F1F1F1; color: #A5A5A5; }
-  .cmp-col.now .cmp-badge { background: var(--green); color: #fff; }
+  .cmp-col.now .cmp-badge { background: linear-gradient(150deg, #2BD98F, #00B56C); color: #fff; box-shadow: 0 6px 16px -4px rgba(0,199,118,.45); }
   .cmp-head h3 { font-size: 16.5px; font-weight: 800; }
   .cmp-col.before .cmp-head h3 { color: var(--ink-2); }
   .cmp-list { display: flex; flex-direction: column; gap: 13px; list-style: none; }
@@ -745,11 +829,15 @@
   }
   .faq summary::-webkit-details-marker { display: none; }
   .faq summary:hover { color: var(--green-deep); }
-  .faq summary .chev { margin-left: auto; width: 21px; height: 21px; flex: none; color: var(--green-deep); transition: transform .35s var(--ease-out); }
-  .faq details[open] summary .chev { transform: rotate(180deg); }
+  .faq summary .chev {
+    margin-left: auto; flex: none; width: 34px; height: 34px;
+    padding: 8px; border-radius: 50%;
+    background: var(--green-soft); color: var(--green-deep);
+    transition: transform .35s var(--ease-out), background .3s, color .3s;
+  }
+  .faq details[open] summary .chev { transform: rotate(180deg); background: var(--green); color: #fff; }
   .faq .ans { padding: 0 22px 22px; font-size: 14.8px; color: var(--ink-2); line-height: 1.82; }
   .faq .ans b { color: var(--ink); font-weight: 700; }
-  .faq .ans + .ans { padding-top: 14px; }
   .faq details[open] .ans { animation: faqIn .34s var(--ease-out); }
   @keyframes faqIn { from { opacity: 0; transform: translateY(-7px); } to { opacity: 1; transform: none; } }
 
@@ -783,7 +871,7 @@
   /* ============================================================
      滚动入场
      ============================================================ */
-  .reveal { opacity: 0; transform: translateY(24px); transition: opacity .75s var(--ease-out), transform .75s var(--ease-out); }
+  .reveal { opacity: 0; transform: translateY(26px) scale(.988); transition: opacity .8s var(--ease-out), transform .8s var(--ease-out); }
   .reveal.in { opacity: 1; transform: none; }
 
   /* ============================================================
@@ -828,6 +916,10 @@
   @media (max-width: 620px) {
     .grid-4, .grid-3 { grid-template-columns: 1fr; }
     .cmp { grid-template-columns: 1fr; }
+    .br-m { display: inline; }
+    .sec-head p { font-size: 15.5px; }
+    .cta-band p { font-size: 15.5px; }
+    .quote { font-size: 19px; }
     .faq summary { padding: 17px 18px; font-size: 15.3px; gap: 11px; }
     .faq .ans { padding: 0 18px 20px; font-size: 14.3px; }
     .card { padding: 26px 22px; }
@@ -872,6 +964,8 @@
       <stop offset="0" stop-color="#FFFFFF"/>
       <stop offset="1" stop-color="#E6FFFA"/>
     </linearGradient>
+    <!-- 渡鸦四处内联而非 <use> 复用：use 的 shadow 树吃不到文档 CSS，
+         眨眼 / 歪头 / 啄这些部件动画会全部失效（已实测），只能接受重复 -->
   </defs>
 </svg>
 
@@ -949,7 +1043,7 @@
     </div>
 
     <div class="anim" style="--d:.24s">
-      <p class="sub">刷到的、听到的、读到的英语素材，截图、链接、PDF 扔进来就自动记一笔，沉淀为你的个人知识库——而不只是应试导向的背单词。</p>
+      <p class="sub">刷到的、听到的、读到的英语素材，<br class="br-m">截图、链接、PDF 扔进来就自动记一笔，<br class="br-m">沉淀为你的个人知识库——<br class="br-m">而不只是应试导向的背单词。</p>
     </div>
     <div class="anim hero-actions" style="--d:.34s">
       <a class="btn btn-primary" href="#cta">免费开始</a>
@@ -990,28 +1084,28 @@
         <!-- 知识库侧栏 -->
         <aside class="mk-side">
           <div class="mk-side-title">知识库</div>
-          <div class="mk-folder on"><span class="fd"></span>日常口语<span class="mk-count">42</span></div>
-          <div class="mk-folder"><span class="fd"></span>雅思写作<span class="mk-count">31</span></div>
-          <div class="mk-folder"><span class="fd"></span>短视频<span class="mk-count">24</span></div>
-          <div class="mk-folder"><span class="fd"></span>大学英语<span class="mk-count">18</span></div>
+          <div class="mk-folder on"><span class="fd"></span>日常口语<span class="mk-count" data-count="42">42</span></div>
+          <div class="mk-folder"><span class="fd"></span>雅思写作<span class="mk-count" data-count="31">31</span></div>
+          <div class="mk-folder"><span class="fd"></span>短视频<span class="mk-count" data-count="24">24</span></div>
+          <div class="mk-folder"><span class="fd"></span>大学英语<span class="mk-count" data-count="18">18</span></div>
           <div class="mk-progress">
             <span class="ring">
               <svg width="38" height="38" viewBox="0 0 38 38">
                 <circle cx="19" cy="19" r="15.5" fill="none" stroke="#EAEAEA" stroke-width="4"/>
-                <circle cx="19" cy="19" r="15.5" fill="none" stroke="#00C776" stroke-width="4"
+                <circle class="ring-fg" cx="19" cy="19" r="15.5" fill="none" stroke="#00C776" stroke-width="4"
                         stroke-linecap="round" stroke-dasharray="97.4" stroke-dashoffset="31"/>
               </svg>
-              <span class="ring-num">68%</span>
+              <span class="ring-num"><span data-count="68">68</span>%</span>
             </span>
-            <span class="txt">今日复习<br>已完成 12 / 18</span>
+            <span class="txt">今日复习<br>已完成 <span data-count="12">12</span> / <span data-count="18">18</span></span>
           </div>
         </aside>
 
         <!-- 对话 -->
         <div class="chat">
-          <div class="bubble user">📷 [截图] 刷到的一条推文："Not gonna lie, this is a game changer."</div>
+          <div class="bubble user">📷 [截图] 刷到的一条推文：“Not gonna lie, this is a game changer.”</div>
           <div class="bubble agent">
-            已记一笔 ✅ 识别到地道口语表达 <b>"not gonna lie (NGL)"</b>——"说实话"，社媒高频缩写。已生成闪卡，归入「日常口语」。
+            已记一笔 ✅ 识别到地道口语表达 <b>“not gonna lie (NGL)”</b>——“说实话”，社媒高频缩写。已生成闪卡，归入「日常口语」。
             <div class="tag-row">
               <span class="tag"># 日常口语</span><span class="tag"># 社媒用语</span><span class="tag"># B1</span>
             </div>
@@ -1049,8 +1143,8 @@
             <div class="src">🎬 来自短视频收藏</div>
           </div>
           <div class="mk-more">
-            <span>本周新增 <b>68</b> 张</span>
-            <span>待复习 <b>18</b></span>
+            <span>本周新增 <b data-count="68">68</b> 张</span>
+            <span>待复习 <b data-count="18">18</b></span>
           </div>
         </aside>
       </div>
@@ -1063,18 +1157,6 @@
     <div class="marquee-viewport">
       <div class="marquee-track">
         <div class="marquee-group">
-          <span class="chip"><i class="bullet"></i>YouTube 视频</span>
-          <span class="chip"><i class="bullet"></i>Instagram</span>
-          <span class="chip"><i class="bullet"></i>Podcast</span>
-          <span class="chip"><i class="bullet"></i>X / 推文</span>
-          <span class="chip"><i class="bullet"></i>短视频字幕</span>
-          <span class="chip"><i class="bullet"></i>教材 PDF</span>
-          <span class="chip"><i class="bullet"></i>外刊文章</span>
-          <span class="chip"><i class="bullet"></i>影视片段</span>
-          <span class="chip"><i class="bullet"></i>论文摘要</span>
-          <span class="chip"><i class="bullet"></i>演讲字幕</span>
-        </div>
-        <div class="marquee-group" aria-hidden="true">
           <span class="chip"><i class="bullet"></i>YouTube 视频</span>
           <span class="chip"><i class="bullet"></i>Instagram</span>
           <span class="chip"><i class="bullet"></i>Podcast</span>
@@ -1099,7 +1181,7 @@
     <div class="sec-head reveal">
       <span class="sec-eyebrow">Capture</span>
       <h2>万物皆可<span class="hl">记一笔</span></h2>
-      <p>英语素材散落在世界的每个角落。语学伴把它们收进一个 App——随手一扔，Agent 自动识别、整理、入库。</p>
+      <p>英语素材散落在世界的每个角落。<br class="br-m">语学伴把它们收进一个 App——<br class="br-m">随手一扔，Agent 自动识别、整理、入库。</p>
     </div>
     <div class="grid grid-4">
       <div class="card reveal">
@@ -1140,7 +1222,7 @@
     <div class="sec-head reveal">
       <span class="sec-eyebrow">Workflow</span>
       <h2>三步，从碎片到<span class="hl">体系</span></h2>
-      <p>采集 → 闪卡 → 聚合。Agent 负责所有繁琐的事，你只管学。</p>
+      <p>采集 → 闪卡 → 聚合。<br class="br-m">Agent 负责所有繁琐的事，你只管学。</p>
     </div>
 
     <div class="flow">
@@ -1328,7 +1410,7 @@
     <div class="sec-head reveal">
       <span class="sec-eyebrow">Scenarios</span>
       <h2>同一个知识库，<span class="hl">多种打开方式</span></h2>
-      <p>你的闪卡不是终点。Agent 会根据学习目标，把碎片重新聚合成真正可用的学习内容。</p>
+      <p>你的闪卡不是终点。<br class="br-m">Agent 会根据学习目标，<br class="br-m">把碎片重新聚合成真正可用的学习内容。</p>
     </div>
     <div class="grid grid-4">
       <div class="card reveal">
@@ -1369,7 +1451,7 @@
     <div class="sec-head reveal">
       <span class="sec-eyebrow">Compare</span>
       <h2>换一种方式<span class="hl">积累英语</span></h2>
-      <p>同样的碎片时间，一个只是划过，一个变成你自己的语料。</p>
+      <p>同样的碎片时间，一个只是划过，<br class="br-m">一个变成你自己的语料。</p>
     </div>
     <div class="cmp">
       <div class="cmp-col before reveal">
@@ -1446,9 +1528,9 @@
 <section class="block">
   <div class="container">
     <p class="quote reveal" id="quote">
-      "英语学习不该只是<span class="mark">应试导向的背单词</span>。<br>
-      你在生活中遇见的每一个表达，都值得被沉淀下来，<br>
-      成为<span class="mark d1">属于你自己的知识库</span>，并在需要的时候长成真正的语言能力。"
+      “英语学习不该只是<span class="mark">应试导向的背单词</span>。<br>
+      你在生活中遇见的每一个表达，<br class="br-m">都值得被沉淀下来，<br>
+      成为<span class="mark d1">属于你自己的知识库</span>，<br class="br-m">并在需要的时候长成真正的语言能力。”
     </p>
   </div>
 </section>
@@ -1468,7 +1550,7 @@
     </g>
   </svg>
   <h2>从今天的第一个截图开始</h2>
-  <p>把你最近刷到的一条英语表达扔进来，几十秒后就能看到它变成一张闪卡。</p>
+  <p>把你最近刷到的一条英语表达扔进来，<br class="br-m">几十秒后就能看到它变成一张闪卡。</p>
   <div class="cta-actions">
     <a class="btn btn-primary" href="#">免费开始使用</a>
     <a class="btn btn-outline" href="#faq">先看看常见问题</a>
@@ -1529,6 +1611,15 @@
   'use strict';
   var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var fine = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+
+  /* ============ 0. 跑马灯：JS 复制一组，让 -50% 位移无缝循环 ============ */
+  (function () {
+    var track = document.querySelector('.marquee-track');
+    if (!track || !track.firstElementChild) return;
+    var copy = track.firstElementChild.cloneNode(true);
+    copy.setAttribute('aria-hidden', 'true');
+    track.appendChild(copy);
+  })();
 
   /* ============ 1. 灵动切换词：上下翻转 + 高亮扫入 ============ */
   (function () {
@@ -1628,9 +1719,9 @@
   }
 
   /* ============ 3. 滚动：进度条 + 吸顶阴影 + 水印视差 ============ */
+  /* 水印视差已交给 CSS 滚动时间线，这里只管进度条与吸顶阴影 */
   var nav = document.getElementById('nav');
   var bar = document.getElementById('navProgress');
-  var wm = document.getElementById('watermark');
   var ticking = false;
 
   function onScroll() {
@@ -1641,9 +1732,6 @@
       var max = document.documentElement.scrollHeight - window.innerHeight;
       if (bar) bar.style.transform = 'scaleX(' + (max > 0 ? Math.min(y / max, 1) : 0) + ')';
       if (nav) nav.classList.toggle('is-stuck', y > 6);
-      if (wm && !reduce && y < 1200) {
-        wm.style.transform = 'rotate(-24deg) translateY(' + (y * 0.07) + 'px)';
-      }
       ticking = false;
     });
   }
@@ -1701,6 +1789,50 @@
         if (r.top < window.innerHeight && r.bottom > 0) el.classList.add('in');
       });
     }, 3000);
+  })();
+
+  /* ============ 5.5 示意窗数字滚动 + 复习环 ============ */
+  (function () {
+    var wrap = document.querySelector('.mockup-wrap');
+    if (!wrap || reduce) return;
+    var nums = [].slice.call(wrap.querySelectorAll('[data-count]'));
+    var ring = wrap.querySelector('.ring-fg');
+    var done = false;
+
+    function count(el) {
+      var end = parseInt(el.getAttribute('data-count'), 10) || 0;
+      var t0 = null;
+      var step = function (t) {
+        if (t0 === null) t0 = t;
+        var p = Math.min((t - t0) / 1100, 1);
+        p = 1 - Math.pow(1 - p, 3); /* easeOutCubic */
+        el.textContent = String(Math.round(end * p));
+        if (p < 1) window.requestAnimationFrame(step);
+      };
+      window.requestAnimationFrame(step);
+    }
+
+    function go() {
+      if (done) return;
+      done = true;
+      nums.forEach(count);
+      if (ring) {
+        /* 先归零再放回 CSS 定义的终值（31），靠 transition 扫出弧线 */
+        ring.style.strokeDashoffset = '97.4';
+        void ring.getBoundingClientRect();
+        ring.style.strokeDashoffset = '';
+      }
+      wrap.classList.add('counters-go');
+    }
+
+    if (!('IntersectionObserver' in window)) { nums.forEach(count); return; }
+    var io = new IntersectionObserver(function (entries) {
+      var hit = entries.some(function (e) { return e.isIntersecting; });
+      if (!hit) return;
+      io.disconnect();
+      go();
+    }, { threshold: .2 });
+    io.observe(wrap);
   })();
 
   /* ============ 6. 闪卡翻转（点击 / 键盘） ============ */
