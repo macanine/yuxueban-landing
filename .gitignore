@@ -6,5 +6,9 @@
 .vscode/
 .idea/
 
+# 依赖与构建产物
+node_modules/
+dist/
+
 # 助手工作区数据（项目记忆、会话日志），不入库
 .workbuddy/

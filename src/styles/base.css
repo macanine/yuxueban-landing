@@ -1,0 +1,105 @@
+  /* ============================================================
+     设计变量
+     ============================================================ */
+  :root {
+    --green: #00C776;
+    --green-deep: #00A863;
+    --green-mid: #35D894;
+    --green-soft: #E9FBF2;
+    --green-mist: #F3FDF8;
+    --ink: #111111;
+    --ink-2: #565656;
+    --ink-3: #767676;
+    --ink-4: #CFCFCF;
+    --border: #ECECEC;
+    --bg: #FFFFFF;
+    --bg-soft: #FAFAFA;
+    --ease-out: cubic-bezier(.22, 1, .36, 1);
+    --ease-soft: cubic-bezier(.4, .2, .2, 1);
+    --spring: cubic-bezier(.34, 1.56, .64, 1);
+    --shadow-lg: 0 2px 6px rgba(17,17,17,.04), 0 26px 64px -18px rgba(17,17,17,.16);
+    --shadow-green: 0 12px 30px -6px rgba(0,199,118,.4);
+    --sec-pad: clamp(72px, 9vw, 108px);
+    --shell: 1120px;
+    /* 现代中文字体栈：MiSans 优先，逐级降级到各平台自带现代中文字体 */
+    --font-sans: "MiSans", "HarmonyOS Sans SC", "HarmonyOS Sans", "PingFang SC",
+                 "Hiragino Sans GB", "Source Han Sans SC", "Noto Sans SC",
+                 "Microsoft YaHei", system-ui, -apple-system, "Segoe UI", sans-serif;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+  body {
+    font-family: var(--font-sans);
+    color: var(--ink);
+    background: var(--bg);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+  a { text-decoration: none; color: inherit; }
+  svg { display: block; }
+  button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
+  img, svg { max-width: 100%; }
+  .container { width: 100%; max-width: var(--shell); margin: 0 auto; padding: 0 24px; }
+
+  /* ============================================================
+     基础可用性：焦点可见 / 选中色 / 锚点避让吸顶导航 / 排版微调
+     ============================================================ */
+  :focus-visible { outline: 2.5px solid var(--green); outline-offset: 3px; border-radius: 6px; }
+  ::selection { background: rgba(0,199,118,.2); }
+  a, button, summary { -webkit-tap-highlight-color: transparent; }
+  section[id], header[id], div[id], p[id] { scroll-margin-top: 82px; }
+  h1, h2, h3, h4 { text-wrap: balance; }
+  p { text-wrap: pretty; }
+  /* 移动端专用断行：窄屏一句一行，桌面视口不生效 */
+  .br-m { display: none; }
+  .skip-link {
+    position: fixed; left: 50%; top: -70px; z-index: 300;
+    transform: translateX(-50%);
+    padding: 11px 22px; border-radius: 0 0 14px 14px;
+    background: var(--ink); color: #fff; font-size: 14.5px; font-weight: 600;
+    box-shadow: 0 10px 30px rgba(17,17,17,.18);
+    transition: top .28s var(--ease-out);
+  }
+  .skip-link:focus { top: 0; }
+  /* 只给读屏的文本 */
+  .sr-only {
+    position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+    overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%);
+    white-space: nowrap; border: 0;
+  }
+
+
+  /* ============================================================
+     渡鸦 Logo：眨眼 / 歪头 / 轻啄（渡鸦喜欢收集闪亮的小物件，
+     正好呼应「万物皆可记一笔」）
+     ============================================================ */
+  .raven .rv-eye {
+    transform-box: fill-box; transform-origin: center;
+    animation: rvBlink 5.4s infinite;
+  }
+  @keyframes rvBlink {
+    0%, 93%, 100% { transform: scaleY(1); }
+    96% { transform: scaleY(.08); }
+  }
+  .raven .rv-head {
+    transform-box: fill-box; transform-origin: 26% 82%;
+    animation: rvTilt 6s ease-in-out infinite;
+  }
+  @keyframes rvTilt {
+    0%, 20%, 50%, 72%, 100% { transform: rotate(0); }
+    28% { transform: rotate(2.4deg); }
+    40% { transform: rotate(-2deg); }
+    54% { transform: rotate(10deg); }
+    58% { transform: rotate(7.5deg); }
+    62% { transform: rotate(11deg); }
+  }
+  .raven .rv-beak {
+    transform-box: fill-box; transform-origin: 10% 55%;
+    animation: rvBeak 6s ease-in-out infinite;
+  }
+  @keyframes rvBeak {
+    0%, 50%, 64%, 100% { transform: rotate(0); }
+    54% { transform: rotate(-6deg); }
+    58% { transform: rotate(3deg); }
+  }

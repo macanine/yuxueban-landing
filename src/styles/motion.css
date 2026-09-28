@@ -1,0 +1,14 @@
+  /* ============================================================
+     滚动入场
+     ============================================================ */
+  .reveal { opacity: 0; transform: translateY(26px) scale(.988); transition: opacity .8s var(--ease-out), transform .8s var(--ease-out); }
+  .reveal.in { opacity: 1; transform: none; }
+
+  /* ============================================================
+     无障碍：减少动态
+     ============================================================ */
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    *, *::before, *::after { animation: none !important; transition-duration: .01s !important; }
+    .reveal { opacity: 1; transform: none; }
+  }

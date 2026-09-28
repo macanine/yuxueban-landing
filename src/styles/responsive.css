@@ -1,0 +1,64 @@
+  /* ============================================================
+     响应式
+     ============================================================ */
+  @media (max-width: 1100px) { .mockup-body { grid-template-columns: 160px 1fr 226px; } }
+  @media (max-width: 1023px) { .watermark { display: none; } }
+  @media (max-width: 960px) {
+    .grid-4, .grid-3 { grid-template-columns: repeat(2, 1fr); }
+    .mk-side { display: none; }
+    .mockup-body { grid-template-columns: 1fr 236px; }
+  }
+  @media (max-width: 860px) {
+    .nav-links { gap: 24px; font-size: 14.5px; }
+    .flow { grid-template-columns: 1fr; gap: 46px; }
+    .flow-step { padding: 0; }
+    .flow-arrow { display: none; }
+    .flow-art { margin-bottom: 16px; }
+  }
+  @media (max-width: 768px) {
+    .nav-inner { height: 58px; }
+    .nav-links { display: none; }
+    .nav-burger { display: flex; }
+    .nav-panel { padding: 6px 18px 20px; }
+    .hero { padding-top: 62px; }
+    section.block { padding: 68px 0 56px; }
+    .sec-head { margin-bottom: 42px; }
+    .dots-orn { display: none; }
+    .mockup-wrap { margin-top: 48px; padding: 0 16px; }
+    .hero-raven { width: 64px; height: 64px; top: -30px; right: 12px; border-radius: 16px; }
+    .mockup-body { grid-template-columns: 1fr; }
+    .mk-cards { border-left: none; border-top: 1px solid var(--border); }
+    .chat { padding: 22px 18px; }
+    .marquee { padding: 30px 0 56px; }
+    .cta-band { margin: 0 16px 64px; padding: 56px 22px; border-radius: 20px; }
+    .container { padding: 0 18px; }
+    .cmp-col { padding: 26px 22px; }
+    .foot-top { flex-direction: column; gap: 34px; padding-bottom: 28px; }
+    .foot-cols { gap: 48px; }
+    .foot-bottom { padding-top: 22px; }
+  }
+  @media (max-width: 620px) {
+    .grid-4, .grid-3 { grid-template-columns: 1fr; }
+    .cmp { grid-template-columns: 1fr; }
+    .br-m { display: inline; }
+    .sec-head p { font-size: 15.5px; }
+    .cta-band p { font-size: 15.5px; }
+    .quote { font-size: 19px; }
+    .faq summary { padding: 17px 18px; font-size: 15.3px; gap: 11px; }
+    .faq .ans { padding: 0 18px 20px; font-size: 14.3px; }
+    .card { padding: 26px 22px; }
+    .hero-actions { gap: 10px; }
+    .hero-actions .btn { flex: 1 1 0; min-width: 0; padding: 13px 10px; font-size: 15px; }
+    .hero-note { margin-top: 18px; font-size: 12.5px; gap: 7px; }
+    .bubble { font-size: 13.5px; }
+    .flip { height: 200px; }
+    .flip-face { padding: 20px; }
+    .mk-cards { padding: 20px 16px; }
+  }
+  @media (max-width: 400px) {
+    .hero-title { font-size: clamp(26px, 9.4vw, 34px); }
+    .btn-pill-dark { padding: 8px 18px; font-size: 13.5px; }
+    .flip-front .head { font-size: 20px; }
+    .hero-raven { width: 56px; height: 56px; top: -26px; right: 8px; }
+    .foot-cols { gap: 34px; }
+  }
