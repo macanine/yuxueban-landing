@@ -7,7 +7,7 @@ import SectionHead from './SectionHead.vue'
     <div class="container">
       <SectionHead eyebrow="Workflow">
         <template #title>三步，从碎片到<span class="hl">体系</span></template>
-        <template #desc>采集 → 闪卡 → 聚合。<br class="br-m">Agent 负责所有繁琐的事，你只管学。</template>
+        <template #desc>采集 → 拆解 → 聚合。<br class="br-m">AI Agent 负责所有繁琐的事，你只管学。</template>
       </SectionHead>
 
       <div class="flow">
@@ -70,8 +70,8 @@ import SectionHead from './SectionHead.vue'
             <path class="spark" d="M26 94l2.4 5.4 5.4 2.4-5.4 2.4-2.4 5.4-2.4-5.4-5.4-2.4 5.4-2.4z" fill="#7FE0B4"/>
           </svg>
           <div class="flow-num">2</div>
-          <h3>统一为闪卡</h3>
-          <p>所有资产被 Agent 拆解、规范成一张张闪卡碎片，语境、来源、难度标签一并带上。</p>
+          <h3>AI 拆解为闪卡</h3>
+          <p>AI 将所有素材拆解、规范为一张张闪卡，语境、来源、难度标签一并标注。</p>
           <span class="flow-arrow" aria-hidden="true">
             <svg viewBox="0 0 44 24" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path class="dashline" d="M2 12h30" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
@@ -105,8 +105,8 @@ import SectionHead from './SectionHead.vue'
             </g>
           </svg>
           <div class="flow-num">3</div>
-          <h3>聚合为学习内容</h3>
-          <p>Agent 按你的目标把碎片重新聚合：要考试的生成机考真题，练听说的变成对话练习。</p>
+          <h3>聚合为专属练习</h3>
+          <p>AI 按你的目标把碎片重新聚合——备考雅思的生成模拟真题，练口语的变成情景对话。</p>
         </div>
       </div>
     </div>

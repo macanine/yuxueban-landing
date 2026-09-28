@@ -82,7 +82,7 @@ onUnmounted(() => {
     <div class="mockup">
       <div class="mockup-bar">
         <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
-        <span class="mockup-title">语学伴 — 我的英语知识库</span>
+        <span class="mockup-title">语学伴 — 我的专属英语知识库</span>
       </div>
       <div class="mockup-body">
         <!-- 知识库侧栏 -->

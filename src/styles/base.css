@@ -19,6 +19,8 @@
     --spring: cubic-bezier(.34, 1.56, .64, 1);
     --shadow-lg: 0 2px 6px rgba(17,17,17,.04), 0 26px 64px -18px rgba(17,17,17,.16);
     --shadow-green: 0 12px 30px -6px rgba(0,199,118,.4);
+    --shadow-card: 0 1px 3px rgba(17,17,17,.03), 0 8px 24px -8px rgba(17,17,17,.08);
+    --shadow-card-hover: 0 4px 12px rgba(17,17,17,.06), 0 32px 72px -20px rgba(17,17,17,.18);
     --sec-pad: clamp(72px, 9vw, 108px);
     --shell: 1120px;
     /* 现代中文字体栈：MiSans 优先，逐级降级到各平台自带现代中文字体 */
@@ -32,7 +34,8 @@
     font-family: var(--font-sans);
     color: var(--ink);
     background: var(--bg);
-    line-height: 1.6;
+    line-height: 1.7;
+    letter-spacing: .01em;
     -webkit-font-smoothing: antialiased;
     overflow-x: hidden;
   }

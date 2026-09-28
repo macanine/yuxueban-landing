@@ -13,7 +13,7 @@
   .dots-orn.tl { left: 8px; top: 40px; }
   .dots-orn.br { right: 8px; bottom: 40px; transform: rotate(180deg); }
 
-  .sec-head { position: relative; z-index: 1; text-align: center; max-width: 660px; margin: 0 auto 58px; }
+  .sec-head { position: relative; z-index: 1; text-align: center; max-width: 680px; margin: 0 auto 58px; }
   .sec-eyebrow {
     display: inline-flex; align-items: center; gap: 8px;
     font-size: 12.5px; font-weight: 700; letter-spacing: .16em;
@@ -22,7 +22,7 @@
   .sec-eyebrow::before, .sec-eyebrow::after { content: ""; width: 22px; height: 1px; background: rgba(0,199,118,.45); }
   .sec-head h2 { font-size: clamp(27px, 4.6vw, 42px); font-weight: 900; letter-spacing: -.022em; line-height: 1.24; }
   .sec-head h2 .hl { color: var(--green); }
-  .sec-head p { margin-top: 16px; color: var(--ink-2); font-size: 16px; }
+  .sec-head p { margin-top: 16px; color: var(--ink-2); font-size: 16.5px; line-height: 1.8; }
 
   .grid { position: relative; z-index: 1; display: grid; gap: 20px; }
   .grid-4 { grid-template-columns: repeat(4, 1fr); }
@@ -30,8 +30,8 @@
 
   .card {
     position: relative; overflow: hidden;
-    background: #fff; border: 1px solid var(--border); border-radius: 18px;
-    padding: 32px 28px;
+    background: #fff; border: 1px solid var(--border); border-radius: 20px;
+    padding: 34px 30px;
     transition: transform .34s var(--ease-out), box-shadow .34s, border-color .34s;
   }
   /* 光标聚光：固定尺寸圆斑随 transform 移动，hover 时不再逐帧整卡重绘 */
@@ -55,13 +55,13 @@
   .card:hover::after { transform: scaleX(1); }
   .card > * { position: relative; z-index: 1; }
   .card .icon {
-    width: 46px; height: 46px; border-radius: 13px; display: grid; place-items: center;
+    width: 48px; height: 48px; border-radius: 14px; display: grid; place-items: center;
     background: var(--green-soft); color: var(--green-deep); margin-bottom: 18px;
     transition: transform .34s var(--ease-out);
   }
   .card:hover .icon { transform: scale(1.06) rotate(-4deg); }
-  .card h3 { font-size: 17px; font-weight: 800; margin-bottom: 8px; letter-spacing: -.01em; }
-  .card p { font-size: 14.5px; color: var(--ink-2); }
+  .card h3 { font-size: 17.5px; font-weight: 800; margin-bottom: 8px; letter-spacing: -.01em; }
+  .card p { font-size: 15px; color: var(--ink-2); line-height: 1.72; }
 
   /* ============================================================
      工作流：手绘插画 + 流动虚线
@@ -87,8 +87,8 @@
   /* 入场前缩到 0，随 .in 一起弹出 */
   .reveal:not(.in) .flow-num { transform: rotate(-6deg) scale(0); }
   .flow-step:hover .flow-num { transform: rotate(0) scale(1.1); }
-  .flow-step h3 { font-size: 18px; font-weight: 800; margin-bottom: 8px; }
-  .flow-step p { font-size: 14.5px; color: var(--ink-2); max-width: 290px; margin: 0 auto; }
+  .flow-step h3 { font-size: 18.5px; font-weight: 800; margin-bottom: 8px; }
+  .flow-step p { font-size: 15px; color: var(--ink-2); max-width: 300px; margin: 0 auto; }
   .flow-arrow { position: absolute; top: 66px; right: -20px; width: 44px; height: 24px; color: var(--green); }
   .flow-arrow svg { width: 100%; height: 100%; }
   .flow-arrow .dashline { stroke-dasharray: 4 5; animation: dashflow 1.4s linear infinite; }
@@ -113,7 +113,7 @@
   @keyframes spinHint { 0%,100% { transform: rotate(0); } 50% { transform: rotate(180deg); } }
 
   .flip {
-    position: relative; height: 216px; border-radius: 16px;
+    position: relative; height: 224px; border-radius: 16px;
     perspective: 1400px; cursor: pointer; outline: none;
     transition: transform .35s var(--ease-out);
   }
@@ -132,13 +132,13 @@
   .flip-face {
     position: absolute; inset: 0;
     display: flex; flex-direction: column;
-    padding: 24px; border-radius: 16px;
+    padding: 24px; border-radius: 18px;
     border: 1px solid var(--border); background: #fff;
     box-shadow: 0 2px 10px rgba(17,17,17,.04);
     -webkit-backface-visibility: hidden; backface-visibility: hidden;
   }
   .flip-front .cat, .flip-back .cat { font-size: 11.5px; font-weight: 700; color: var(--green-deep); letter-spacing: .04em; }
-  .flip-front .head { margin-top: auto; font-size: 22px; font-weight: 800; letter-spacing: -.01em; line-height: 1.3; }
+  .flip-front .head { margin-top: auto; font-size: 23px; font-weight: 800; letter-spacing: -.01em; line-height: 1.3; }
   .flip-front .sub { margin-top: 8px; font-size: 12.5px; color: var(--ink-3); }
   .flip-front .corner {
     position: absolute; right: 18px; bottom: 18px; width: 26px; height: 26px;
@@ -161,7 +161,7 @@
   .quote {
     max-width: 800px; margin: 0 auto; text-align: center;
     font-size: clamp(20px, 2.8vw, 27px); font-weight: 700;
-    line-height: 1.85; letter-spacing: -.01em;
+    line-height: 1.9; letter-spacing: -.01em;
   }
   .mark {
     color: var(--green);
@@ -181,7 +181,7 @@
      ============================================================ */
   .cta-band {
     position: relative; overflow: hidden; text-align: center;
-    margin: 0 24px 96px; padding: 78px 32px; border-radius: 28px;
+    margin: 0 24px 96px; padding: 84px 36px; border-radius: 30px;
     background:
       radial-gradient(640px 300px at 84% -10%, rgba(53,216,148,.22), transparent 62%),
       linear-gradient(180deg, #F7FEFB 0%, #E8FBF2 100%);
@@ -206,7 +206,7 @@
     animation: floaty 4.4s ease-in-out infinite alternate;
   }
   .cta-band h2 { font-size: clamp(25px, 4.4vw, 42px); font-weight: 900; letter-spacing: -.02em; }
-  .cta-band p { margin: 16px 0 32px; color: var(--ink-2); font-size: 16.5px; }
+  .cta-band p { margin: 16px 0 32px; color: var(--ink-2); font-size: 17px; }
   .cta-actions { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
   .cta-note { margin-top: 22px; font-size: 13px; color: var(--ink-3); }
 
@@ -219,7 +219,7 @@
     max-width: 880px; margin: 0 auto;
   }
   .cmp-col {
-    border-radius: 18px; padding: 30px 28px;
+    border-radius: 20px; padding: 32px 30px;
     border: 1px solid var(--border); background: #fff;
     transition: transform .34s var(--ease-out), box-shadow .34s, border-color .34s;
   }
@@ -236,7 +236,7 @@
   .cmp-head h3 { font-size: 16.5px; font-weight: 800; }
   .cmp-col.before .cmp-head h3 { color: var(--ink-2); }
   .cmp-list { display: flex; flex-direction: column; gap: 13px; list-style: none; }
-  .cmp-list li { display: flex; gap: 11px; font-size: 14.5px; line-height: 1.62; }
+  .cmp-list li { display: flex; gap: 11px; font-size: 15px; line-height: 1.62; }
   .cmp-list .mk {
     width: 18px; height: 18px; flex: none; margin-top: 3px; border-radius: 6px;
     display: grid; place-items: center; font-size: 11px; font-weight: 900;
@@ -254,13 +254,13 @@
     display: flex; flex-direction: column; gap: 12px;
   }
   .faq details {
-    background: #fff; border: 1px solid var(--border); border-radius: 16px;
+    background: #fff; border: 1px solid var(--border); border-radius: 18px;
     transition: border-color .3s, box-shadow .3s;
   }
   .faq details[open] { border-color: rgba(0,199,118,.35); box-shadow: 0 14px 34px rgba(17,17,17,.06); }
   .faq summary {
     display: flex; align-items: center; gap: 14px;
-    padding: 20px 22px; cursor: pointer; list-style: none;
+    padding: 22px 24px; cursor: pointer; list-style: none;
     font-size: 16px; font-weight: 700; letter-spacing: -.01em;
     transition: color .25s;
   }
@@ -273,7 +273,7 @@
     transition: transform .35s var(--ease-out), background .3s, color .3s;
   }
   .faq details[open] summary .chev { transform: rotate(180deg); background: var(--green); color: #fff; }
-  .faq .ans { padding: 0 22px 22px; font-size: 14.8px; color: var(--ink-2); line-height: 1.82; }
+  .faq .ans { padding: 0 24px 24px; font-size: 15.2px; color: var(--ink-2); line-height: 1.82; }
   .faq .ans b { color: var(--ink); font-weight: 700; }
   .faq details[open] .ans { animation: faqIn .34s var(--ease-out); }
   @keyframes faqIn { from { opacity: 0; transform: translateY(-7px); } to { opacity: 1; transform: none; } }

@@ -4,7 +4,7 @@ import AppMockup from './AppMockup.vue'
 import SourceMarquee from './SourceMarquee.vue'
 import { useRotator } from '../composables/useRotator'
 
-const words = ['YouTube', 'Podcast', 'Instagram', '大学英语', '雅思']
+const words = ['YouTube', 'Podcast', 'TED Talk', '雅思真题', '外刊精读']
 const rotEl = ref<HTMLElement | null>(null)
 const { current, leaving } = useRotator(rotEl, words)
 
@@ -51,7 +51,7 @@ onUnmounted(() => cleanup?.())
 
     <div class="container hero-inner">
       <div class="anim" style="--d:.05s">
-        <div class="hero-badge"><span class="pulse"></span>Agent 驱动 · 随手记一笔</div>
+        <div class="hero-badge"><span class="pulse"></span>AI Agent 驱动 · 一键采集</div>
       </div>
 
       <div class="anim" style="--d:.14s">
@@ -75,16 +75,16 @@ onUnmounted(() => cleanup?.())
       </div>
 
       <div class="anim" style="--d:.24s">
-        <p class="sub">刷到的、听到的、读到的英语素材，<br class="br-m">截图、链接、PDF 扔进来就自动记一笔，<br class="br-m">沉淀成你自己的知识库——<br class="br-m">而不只是背单词。</p>
+        <p class="sub">刷到的、听到的、读到的好英语，<br class="br-m">截图、链接、PDF 扔进来，<br class="br-m">AI 自动拆解为带语境的闪卡——<br class="br-m">沉淀成属于你的知识库。</p>
       </div>
       <div class="anim hero-actions" style="--d:.34s">
-        <a class="btn btn-primary" href="#cta">免费开始</a>
-        <a class="btn btn-outline" href="#workflow">了解工作流</a>
+        <a class="btn btn-primary" href="#cta">✦ 免费开始使用</a>
+        <a class="btn btn-outline" href="#workflow">看看怎么用 →</a>
       </div>
       <div class="anim hero-note" style="--d:.42s">
-        <span>截图 / 链接 / PDF 直接扔进来</span><i class="sep"></i>
-        <span>识别、归档全自动</span><i class="sep"></i>
-        <span>无需手动整理</span>
+        <span>支持截图 · 链接 · PDF · 音视频</span><i class="sep"></i>
+        <span>AI 识别归档</span><i class="sep"></i>
+        <span>零门槛上手</span>
       </div>
     </div>
 

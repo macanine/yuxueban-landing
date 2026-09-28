@@ -9,7 +9,7 @@ import SectionHead from './SectionHead.vue'
     <div class="container">
       <SectionHead eyebrow="Flashcards">
         <template #title>闪卡，是语学伴的<span class="hl">最小单位</span></template>
-        <template #desc>任何素材都会被打散成带语境的闪卡碎片：正面是表达，背面是释义、例句和来源。</template>
+        <template #desc>任何素材都会被 AI 拆解为带语境的闪卡：正面是表达，背面是释义、例句与来源。</template>
       </SectionHead>
       <div class="flip-hint-wrap reveal" v-reveal>
         <span class="flip-hint">
