@@ -6,7 +6,7 @@
     background: rgba(255,255,255,.86);
     backdrop-filter: saturate(180%) blur(16px);
     -webkit-backdrop-filter: saturate(180%) blur(16px);
-    transition: background .4s;
+    transition: background .4s, padding .45s var(--ease-out);
   }
   .nav-inner {
     display: flex; align-items: center; justify-content: space-between; gap: 20px; height: 64px;
@@ -16,9 +16,11 @@
   }
   /* 滚动后：整条导航收拢成一枚悬浮的玻璃胶囊 */
   @media (min-width: 769px) {
-    .nav.is-stuck { background: transparent; backdrop-filter: none; -webkit-backdrop-filter: none; }
+    /* 间距用 nav 自身的 padding：若写成子元素的 margin-top，会穿过 nav 发生外边距折叠，
+       吸顶（top:0）后这段间距就没了，胶囊会贴着窗口顶边 */
+    .nav.is-stuck { padding-top: 10px; background: transparent; backdrop-filter: none; -webkit-backdrop-filter: none; }
     .nav.is-stuck .nav-inner {
-      max-width: 980px; height: 54px; margin-top: 10px; padding: 0 8px 0 18px;
+      max-width: 980px; height: 54px; padding: 0 8px 0 18px;
       border-radius: 99px; border-color: rgba(17,17,17,.07);
       background: rgba(255,255,255,.92);
       backdrop-filter: saturate(180%) blur(18px); -webkit-backdrop-filter: saturate(180%) blur(18px);
