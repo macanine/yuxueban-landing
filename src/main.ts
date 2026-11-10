@@ -3,11 +3,13 @@ import App from './App.vue'
 import LandingPage from './pages/Landing.vue'
 import { vReveal } from './directives/reveal'
 import { vSpotlight } from './directives/spotlight'
+import { vMagnetic } from './directives/magnetic'
 
 import './styles/base.css'
 import './styles/nav.css'
 import './styles/hero.css'
 import './styles/sections.css'
+import './styles/showcase.css'
 import './styles/footer.css'
 import './styles/responsive.css'
 import './styles/motion.css'
@@ -20,4 +22,5 @@ export const createApp = ViteSSG(App, { routes }, ({ app, head }) => {
   head?.push({ htmlAttrs: { lang: 'zh-CN' } })
   app.directive('reveal', vReveal)
   app.directive('spotlight', vSpotlight)
+  app.directive('magnetic', vMagnetic)
 })

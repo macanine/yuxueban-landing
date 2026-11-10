@@ -4,7 +4,7 @@
 
 | 文件 | 作用 |
 | --- | --- |
-| `sub-400.woff2` `sub-650.woff2` `sub-700.woff2` `sub-900.woff2` | **自托管子集**（各 ~52KB）。页面全部字形打包在内，`index.html` 里 `#misans-subset` 内联 `@font-face` + `unicode-range` 引用。首屏字体请求 = 4 个同源请求，CDN 零请求。 |
+| `sub-400.woff2` `sub-650.woff2` `sub-700.woff2` `sub-900.woff2` | **自托管子集**（各 ~58KB）。页面全部字形打包在内，`index.html` 里 `#misans-subset` 内联 `@font-face` + `unicode-range` 引用。首屏字体请求 = 4 个同源请求，CDN 零请求。 |
 | `misans.css` | 官方分片（224 条 `@font-face`，4 字重 × 56 片，走 npmmirror）。以 `media="print" onload` **异步**加载，只为子集没覆盖的新增字形兜底。 |
 
 字重映射：400=Regular，650=Semibold（页面 600 也落到它），700=Bold，900=Heavy（页面 800 也落到它）。
@@ -13,21 +13,23 @@
 ## 重建（文案改动后定期执行）
 
 ```bash
-# 1) 提取页面字符集（node，含 ASCII 安全网）
+# 1) 提取页面字符集（扫描 index.html + src 下全部 .vue/.ts，去掉注释与 <style>，含 ASCII 安全网）
+#    注意：首屏演示里有些对话只在 JS 里出现（SSR 产物中没有），所以必须扫源码而不是 dist
 node -e "
-const fs=require('fs');
-let h=fs.readFileSync('index.html','utf8')
-  .replace(/<script[\s\S]*?<\/script>/gi,' ')
-  .replace(/<style[\s\S]*?<\/style>/gi,' ')
-  .replace(/<!--[\s\S]*?-->/g,' ');
+const fs=require('fs'),path=require('path');
+const files=['index.html'];
+(function walk(d){for(const f of fs.readdirSync(d)){const p=path.join(d,f);fs.statSync(p).isDirectory()?walk(p):/\\.(vue|ts)$/.test(p)&&files.push(p)}})('src');
 const set=new Set();
-for (const ch of h.replace(/<[^>]+>/g,' ')) if (!/\s/.test(ch)) set.add(ch);
-for (let c=0x20;c<=0x7e;c++) set.add(String.fromCodePoint(c));
-for (const ch of '，。、：；！？——…·「」『』（）《》“”‘’—×✓▸→') set.add(ch);
+for(const f of files){let t=fs.readFileSync(f,'utf8')
+  .replace(/<style[\\s\\S]*?<\\/style>/gi,' ').replace(/<!--[\\s\\S]*?-->/g,' ')
+  .replace(/\\/\\*[\\s\\S]*?\\*\\//g,' ').replace(/(^|[^:'\\\"])\\/\\/.*$/gm,'\\$1');
+  for(const ch of t){if(ch.codePointAt(0)>0x7e && !/\\s/.test(ch)) set.add(ch)}}
+for(let c=0x20;c<=0x7e;c++) set.add(String.fromCodePoint(c));
+for(const ch of '，。、：；！？——…·「」『』（）《》“”‘’—×✓▸→–') set.add(ch);
 fs.writeFileSync('/tmp/glyphs.txt',[...set].sort().join(''));
 "
 
-# 2) 官方完整字体（TrueType）：https://hyperos.mi.com/font 下载 MiSans.zip，解压出 ttf/
+# 2) 官方完整字体（TrueType）：https://hyperos.mi.com/font-download/MiSans.zip（~220MB），解压出 ttf/
 
 # 3) 裁剪（python + fonttools+brotli：python3 -m venv /tmp/fv && pip install fonttools brotli）
 for pair in "Regular:400" "Semibold:650" "Bold:700" "Heavy:900"; do
@@ -37,8 +39,9 @@ for pair in "Regular:400" "Semibold:650" "Bold:700" "Heavy:900"; do
     --layout-features='kern,liga,ccmp,locl,mark,mkmk' --notdef-outline --recalc-bounds
 done
 
-# 4) 用字体实际拥有的码点刷新 #misans-subset 的 unicode-range
-#    （▸ ✅ emoji 等缺失码点要排除，否则会改变系统兜底行为）
+# 4) 用字体实际拥有的码点刷新 index.html 里 #misans-subset 的 unicode-range
+#    （▸ ✦ emoji 等缺失码点要排除，否则会改变系统兜底行为）
+#    python -c "from fontTools.ttLib import TTFont; print(sorted(TTFont('fonts/sub-400.woff2').getBestCmap()))" 再合并成连续区间
 ```
 
 ## 注意

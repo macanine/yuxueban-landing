@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import HeroSection from '../components/HeroSection.vue'
+import ValueStrip from '../components/ValueStrip.vue'
 import CaptureSection from '../components/CaptureSection.vue'
 import WorkflowSection from '../components/WorkflowSection.vue'
 import FlashcardSection from '../components/FlashcardSection.vue'
@@ -12,6 +13,7 @@ import CtaBand from '../components/CtaBand.vue'
 
 <template>
   <HeroSection />
+  <ValueStrip />
   <CaptureSection />
   <WorkflowSection />
   <FlashcardSection />

@@ -1,19 +1,45 @@
   /* ============================================================
      响应式
      ============================================================ */
-  @media (max-width: 1100px) { .mockup-body { grid-template-columns: 160px 1fr 226px; } }
+  @media (max-width: 1100px) {
+    .mockup-body { grid-template-columns: 160px 1fr 226px; }
+    .scenes { grid-template-columns: 300px 1fr; }
+  }
   @media (max-width: 1023px) { .watermark { display: none; } }
   @media (max-width: 960px) {
-    .grid-4, .grid-3 { grid-template-columns: repeat(2, 1fr); }
+    .grid-3 { grid-template-columns: repeat(2, 1fr); }
     .mk-side { display: none; }
     .mockup-body { grid-template-columns: 1fr 236px; }
+    .values-grid { grid-template-columns: repeat(2, 1fr); }
+    .value:nth-child(3) { border-left: 0; }
+    .value:nth-child(n+3) { border-top: 1px solid var(--border); }
+    .bento { grid-template-columns: 1fr 1fr; }
+    .tile-wide { flex-direction: column; align-items: stretch; }
+    .tile-wide .tile-copy { flex: none; }
+    /* 场景：标签横排在上，面板在下 */
+    .scenes { grid-template-columns: 1fr; }
+    .scene-tabs {
+      flex-direction: row; overflow-x: auto; scroll-snap-type: x mandatory;
+      margin: 0 -24px; padding: 0 24px 4px; scrollbar-width: none;
+    }
+    .scene-tabs::-webkit-scrollbar { display: none; }
+    .scene-tab { flex: none; scroll-snap-align: start; padding: 12px 18px 14px; }
+    .scene-tab .st-desc { display: none; }
+    .st-bar { left: 18px; right: 18px; }
   }
   @media (max-width: 860px) {
     .nav-links { gap: 24px; font-size: 14.5px; }
-    .flow { grid-template-columns: 1fr; gap: 46px; }
-    .flow-step { padding: 0; }
-    .flow-arrow { display: none; }
-    .flow-art { margin-bottom: 16px; }
+    /* 工作流：不再吸顶，每一步下方内嵌自己的画面 */
+    .story { grid-template-columns: 1fr; gap: 0; }
+    .story-stage { display: none; }
+    .story-step { min-height: 0; padding: 22px 0 34px; opacity: 1; }
+    .story-step::before { top: 30px; margin-top: 0; }
+    .story-steps::before, .story-steps::after { top: 30px; bottom: 40px; }
+    .story-inline {
+      display: flex; justify-content: center; margin-top: 22px; padding: 28px 18px;
+      border-radius: var(--r-lg); border: 1px solid rgba(0,199,118,.18);
+      background: linear-gradient(180deg, #fff, #F4FBF7);
+    }
   }
   @media (max-width: 768px) {
     .nav-inner { height: 58px; }
@@ -28,32 +54,44 @@
     .hero-raven { width: 64px; height: 64px; top: -30px; right: 12px; border-radius: 16px; }
     .mockup-body { grid-template-columns: 1fr; }
     .mk-cards { border-left: none; border-top: 1px solid var(--border); }
-    .chat { padding: 22px 18px; }
-    .marquee { padding: 30px 0 56px; }
-    .cta-band { margin: 0 16px 64px; padding: 56px 22px; border-radius: 20px; }
+    .chat { padding: 18px 16px; }
+    .chat-stream { height: 340px; }
+    .mockup-live { display: none; }
+    .marquee { padding: 30px 0 48px; }
+    .cta-wrap { padding: 0 16px; }
+    .cta-band { margin-bottom: 64px; padding: 64px 22px; border-radius: 26px; }
     .container { padding: 0 18px; }
+    .scene-tabs { margin: 0 -18px; padding: 0 18px 4px; }
+    .scene-panel { padding: 26px 22px; }
     .cmp-col { padding: 26px 22px; }
     .foot-top { flex-direction: column; gap: 34px; padding-bottom: 28px; }
     .foot-cols { gap: 48px; }
     .foot-bottom { padding-top: 22px; }
   }
   @media (max-width: 620px) {
-    .grid-4, .grid-3 { grid-template-columns: 1fr; }
+    .grid-3 { grid-template-columns: 1fr; }
     .cmp { grid-template-columns: 1fr; }
+    .bento { grid-template-columns: 1fr; }
+    .tile-wide { grid-column: auto; }
+    .tile { padding: 24px 22px; }
     .br-m { display: inline; }
     .sec-head p { font-size: 15.5px; }
     .cta-band p { font-size: 15.5px; }
-    .quote { font-size: 19px; }
+    .quote { font-size: 20px; }
     .faq summary { padding: 19px 20px; font-size: 15.3px; gap: 11px; }
     .faq .ans { padding: 0 20px 22px; font-size: 14.3px; }
-    .card { padding: 28px 24px; }
     .hero-actions { gap: 10px; }
     .hero-actions .btn { flex: 1 1 0; min-width: 0; padding: 13px 10px; font-size: 15px; }
     .hero-note { margin-top: 18px; font-size: 12.5px; gap: 7px; }
-    .bubble { font-size: 13.5px; }
     .flip { height: 208px; }
     .flip-face { padding: 20px; }
     .mk-cards { padding: 20px 16px; }
+    .value { padding: 20px 18px; }
+    .value-num b { font-size: 24px; }
+    .value p { font-size: 12.5px; }
+    .sp-opts { grid-template-columns: 1fr; }
+    .sp-q { font-size: 16.5px; margin: 20px 0 16px; }
+    .story-step p { font-size: 15px; }
   }
   @media (max-width: 400px) {
     .hero-title { font-size: clamp(26px, 9.4vw, 34px); }
@@ -61,4 +99,5 @@
     .flip-front .head { font-size: 20px; }
     .hero-raven { width: 56px; height: 56px; top: -26px; right: 8px; }
     .foot-cols { gap: 34px; }
+    .value-num { flex-direction: column; gap: 0; }
   }

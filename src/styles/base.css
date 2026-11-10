@@ -13,7 +13,16 @@
     --ink-4: #CFCFCF;
     --border: #ECECEC;
     --bg: #FFFFFF;
-    --bg-soft: #FAFAFA;
+    --bg-soft: #F7F8F7;
+    /* 深色板块（对比 / CTA）：带一点绿调的近黑，比纯黑更有质感 */
+    --night: #0C1310;
+    --night-2: #131C18;
+    --night-line: rgba(255,255,255,.09);
+    --night-ink: #E9F1ED;
+    --night-mute: #93A49C;
+    --r-xl: 28px;
+    --r-lg: 22px;
+    --r-md: 16px;
     --ease-out: cubic-bezier(.22, 1, .36, 1);
     --ease-soft: cubic-bezier(.4, .2, .2, 1);
     --spring: cubic-bezier(.34, 1.56, .64, 1);

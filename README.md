@@ -17,13 +17,13 @@ npm run typecheck  # vue-tsc 类型检查
 ```
 index.html            # Vite 模板：SEO/OG 元信息、字体加载策略（CDN 兜底 + 内联子集）、noscript 兜底、JSON-LD
 src/
-  main.ts             # vite-ssg 入口：注册 v-reveal / v-spotlight 指令，压回 html lang="zh-CN"
+  main.ts             # vite-ssg 入口：注册 v-reveal / v-spotlight / v-magnetic 指令，压回 html lang="zh-CN"
   App.vue             # 骨架：跳转链接、渡鸦渐变 defs、导航/页脚 + router-view
   pages/Landing.vue   # 落地页各板块组装
-  components/         # SiteNav / HeroSection / AppMockup / SourceMarquee / 各板块 / FlipCard / RavenLogo …
+  components/         # SiteNav / HeroSection / AppMockup（自动播放的产品演示）/ ValueStrip / 各板块 / StageVisual / FlipCard / RavenLogo …
   composables/        # useRotator（首屏切换词轮播）
-  directives/         # v-reveal（滚动入场）、v-spotlight（光标聚光）
-  styles/             # 按板块拆分的全局 CSS（保持原级联顺序：base → nav → hero → sections → footer → responsive → motion）
+  directives/         # v-reveal（滚动入场）、v-spotlight（光标聚光）、v-magnetic（主按钮磁吸）
+  styles/             # 按板块拆分的全局 CSS（保持原级联顺序：base → nav → hero → sections → showcase → footer → responsive → motion）
 public/
   fonts/              # MiSans 自托管子集（4 个 woff2）+ CDN 全量分片兜底 CSS
   logo.svg / og.png   # 图标与社交分享图

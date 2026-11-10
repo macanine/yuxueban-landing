@@ -3,7 +3,7 @@ import SectionHead from './SectionHead.vue'
 </script>
 
 <template>
-  <section class="block alt" id="faq">
+  <section class="block" id="faq">
     <div class="container">
       <SectionHead eyebrow="FAQ">
         <template #title>你可能想问的<span class="hl">几个问题</span></template>

@@ -51,7 +51,7 @@ onUnmounted(() => cleanup?.())
 
     <div class="container hero-inner">
       <div class="anim" style="--d:.05s">
-        <div class="hero-badge"><span class="pulse"></span>AI Agent 驱动 · 一键采集</div>
+        <div class="hero-badge"><span class="pulse"></span>AI Agent 驱动的英语知识库</div>
       </div>
 
       <div class="anim" style="--d:.14s">
@@ -75,16 +75,16 @@ onUnmounted(() => cleanup?.())
       </div>
 
       <div class="anim" style="--d:.24s">
-        <p class="sub">刷到的、听到的、读到的好英语，<br class="br-m">截图、链接、PDF 扔进来，<br class="br-m">AI 自动拆解为带语境的闪卡——<br class="br-m">沉淀成属于你的知识库。</p>
+        <p class="sub">刷到的、听到的、读到的好英语，<br class="br-m">随手一扔就入库。<br>AI 把每一句拆成带语境的闪卡，<br class="br-m">再按你的目标练成真本事。</p>
       </div>
       <div class="anim hero-actions" style="--d:.34s">
-        <a class="btn btn-primary" href="#cta">✦ 免费开始使用</a>
-        <a class="btn btn-outline" href="#workflow">看看怎么用 →</a>
+        <a class="btn btn-primary" href="#cta" v-magnetic>✦ 免费开始使用</a>
+        <a class="btn btn-outline" href="#workflow">看它怎么工作 →</a>
       </div>
       <div class="anim hero-note" style="--d:.42s">
-        <span>支持截图 · 链接 · PDF · 音视频</span><i class="sep"></i>
-        <span>AI 识别归档</span><i class="sep"></i>
-        <span>零门槛上手</span>
+        <span>截图 · 链接 · PDF · 音视频</span><i class="sep"></i>
+        <span>自动标注语境与来源</span><i class="sep"></i>
+        <span>知识库默认私密</span>
       </div>
     </div>
 

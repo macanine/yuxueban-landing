@@ -238,16 +238,42 @@
   .ring { position: relative; width: 38px; height: 38px; flex: none; }
   .ring svg { transform: rotate(-90deg); }
   .ring .ring-num { position: absolute; inset: 0; display: grid; place-items: center; font-size: 10.5px; font-weight: 700; color: var(--green-deep); }
-  /* 复习环：示意窗进入视口后从 0 扫到 68%（JS 挂 .counters-go） */
-  .ring .ring-fg { transition: stroke-dashoffset 1.4s var(--ease-out) .25s; }
-  .counters-go .ring-fg { stroke-dashoffset: 31; }
   .mk-progress .txt { font-size: 11.5px; color: var(--ink-3); line-height: 1.5; }
 
-  .chat { padding: 26px 22px; display: flex; flex-direction: column; gap: 14px; }
-  .bubble { max-width: 92%; padding: 12px 16px; border-radius: 16px; font-size: 14px; line-height: 1.62; }
+  /* 对话区：固定高度，消息从底部长出，旧消息被平滑推上去（TransitionGroup 的 move） */
+  .chat { padding: 22px 22px 20px; display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+  .chat-stream {
+    position: relative; height: 372px; overflow: hidden;
+    display: flex; flex-direction: column; justify-content: flex-end; gap: 12px;
+    -webkit-mask-image: linear-gradient(180deg, transparent 0, #000 48px);
+    mask-image: linear-gradient(180deg, transparent 0, #000 48px);
+  }
+  .bubble { flex: none; max-width: 90%; padding: 11px 15px; border-radius: 16px; font-size: 13.5px; line-height: 1.62; }
   .bubble.user { align-self: flex-end; background: var(--green); color: #fff; border-bottom-right-radius: 4px; }
-  .bubble.agent { align-self: flex-start; background: #F7F7F7; border: 1px solid var(--border); border-bottom-left-radius: 4px; color: var(--ink-2); }
+  .bubble.agent { align-self: flex-start; background: #F6F7F6; border: 1px solid var(--border); border-bottom-left-radius: 4px; color: var(--ink-2); }
   .bubble.agent b { color: var(--ink); }
+  .bubble .attach {
+    display: flex; align-items: center; gap: 6px; width: fit-content;
+    margin-bottom: 6px; padding: 4px 10px 4px 7px; border-radius: 8px;
+    background: rgba(255,255,255,.2); font-size: 12px; font-weight: 600;
+  }
+  .bubble .attach svg { width: 14px; height: 14px; flex: none; }
+  .bubble .ok {
+    display: inline-flex; align-items: center; gap: 5px; margin-right: 6px;
+    padding: 1px 8px 1px 6px; border-radius: 6px; vertical-align: 1px;
+    background: var(--green-soft); color: var(--green-deep); font-size: 11.5px; font-weight: 700;
+  }
+  .bubble .ok::before {
+    content: ""; width: 7px; height: 4px; margin-top: -2px;
+    border-left: 2px solid currentColor; border-bottom: 2px solid currentColor; transform: rotate(-45deg);
+  }
+  .quiz-chip {
+    display: flex; align-items: center; gap: 6px; width: fit-content; margin-top: 9px;
+    padding: 6px 13px 6px 10px; border-radius: 9px;
+    background: var(--ink); color: #fff; font-size: 12px; font-weight: 600;
+  }
+  .quiz-chip svg { width: 11px; height: 11px; }
+  .typing-bubble { padding: 13px 16px; }
   .tag-row { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 9px; }
   .tag { font-size: 11.5px; padding: 3px 10px; border-radius: 99px; background: var(--green-soft); color: var(--green-deep); font-weight: 600; }
   .typing { display: inline-flex; gap: 4px; align-items: center; }
@@ -256,17 +282,25 @@
   .typing i:nth-child(3) { animation-delay: .36s; }
   @keyframes blink { 0%,80%,100% { opacity: .25; transform: translateY(0); } 40% { opacity: 1; transform: translateY(-2px); } }
 
-  /* 对话输入框：把素材扔进来的入口 */
+  /* 消息进出场：从下方弹入，退场淡出（退场时脱离文档流，其余消息平滑补位） */
+  .msg-enter-active { transition: opacity .45s var(--ease-out), transform .55s var(--spring); }
+  .msg-enter-from { opacity: 0; transform: translateY(14px) scale(.96); }
+  .msg-leave-active { transition: opacity .2s ease; position: absolute; }
+  .msg-leave-to { opacity: 0; }
+  .msg-move { transition: transform .5s var(--ease-out); }
+  .bubble.user.msg-enter-from { transform-origin: right bottom; }
+
+  /* 输入框：把素材扔进来的入口 */
   .composer {
-    margin-top: auto; display: flex; align-items: center; gap: 9px;
-    padding: 13px 14px 13px 17px; border: 1px solid var(--border); border-radius: 16px;
+    display: flex; align-items: center; gap: 9px;
+    padding: 12px 13px 12px 16px; border: 1px solid var(--border); border-radius: 15px;
     background: #fff; box-shadow: 0 2px 10px rgba(17,17,17,.045);
-    font-size: 13px; color: var(--ink-3);
+    font-size: 13px; color: var(--ink-3); white-space: nowrap; overflow: hidden;
   }
   .composer .clip { width: 16px; height: 16px; flex: none; color: #B9B9B9; }
   .composer .caret {
     display: inline-block; width: 1.5px; height: 1.02em; margin-left: 2px;
-    background: var(--green); vertical-align: -.16em;
+    background: var(--green); vertical-align: -.16em; flex: none;
     animation: caret 1.15s steps(1) infinite;
   }
   @keyframes caret { 0%, 50% { opacity: 1; } 51%, 100% { opacity: 0; } }
@@ -275,24 +309,44 @@
     display: grid; place-items: center; background: var(--green); color: #fff;
   }
 
-  .mk-cards { border-left: 1px solid var(--border); background: #FCFCFC; padding: 24px 18px; display: flex; flex-direction: column; gap: 12px; }
-  .fc-title { font-size: 12.5px; font-weight: 700; color: var(--ink-3); letter-spacing: .06em; }
-  .flashcard {
-    padding: 15px 17px; border-radius: 14px; border: 1px solid var(--border);
-    background: #fff; box-shadow: 0 2px 8px rgba(0,0,0,.035); font-size: 13px;
-    animation: floaty 4.6s ease-in-out infinite alternate;
+  .mockup-live {
+    margin-left: 6px; padding-left: 12px; border-left: 1px solid var(--border); display: inline-flex; align-items: center; gap: 6px;
+    font-size: 11.5px; font-weight: 600; color: var(--green-deep);
   }
-  .flashcard:nth-child(3) { animation-delay: -1.6s; }
-  .flashcard:nth-child(4) { animation-delay: -3.2s; }
-  .flashcard .q { font-weight: 700; }
-  .flashcard .a { color: var(--ink-2); margin-top: 4px; font-size: 12.5px; }
-  .flashcard .src { margin-top: 8px; font-size: 11px; color: var(--green-deep); }
+  .mockup-live i { width: 6px; height: 6px; border-radius: 50%; background: var(--green); animation: pulse 2.4s infinite; }
+  .mk-count { transition: color .3s, transform .3s var(--spring); }
+  .mk-count.bump { color: var(--green-deep); font-weight: 700; transform: scale(1.35); }
+
+  .mk-cards { border-left: 1px solid var(--border); background: #FCFCFC; padding: 22px 18px; display: flex; flex-direction: column; gap: 12px; min-width: 0; }
+  .fc-title { font-size: 12.5px; font-weight: 700; color: var(--ink-3); letter-spacing: .06em; }
+  .fc-list { position: relative; display: flex; flex-direction: column; gap: 10px; }
+  .flashcard {
+    position: relative;
+    padding: 14px 16px; border-radius: 14px; border: 1px solid var(--border);
+    background: #fff; box-shadow: 0 2px 8px rgba(0,0,0,.035); font-size: 13px;
+    transition: border-color .6s, box-shadow .6s;
+  }
+  .flashcard.fresh { border-color: rgba(0,199,118,.55); box-shadow: 0 0 0 4px rgba(0,199,118,.12), 0 10px 24px -8px rgba(0,199,118,.35); }
+  .fc-new {
+    position: absolute; top: 12px; right: 12px;
+    font-size: 9.5px; font-weight: 800; letter-spacing: .08em;
+    padding: 2px 6px; border-radius: 5px; background: var(--green); color: #fff;
+  }
+  .flashcard .q { font-weight: 700; color: var(--ink); padding-right: 34px; }
+  .flashcard .a { color: var(--ink-2); margin-top: 3px; font-size: 12.5px; }
+  .flashcard .src { display: flex; align-items: center; gap: 5px; margin-top: 7px; font-size: 11px; color: var(--green-deep); }
+  .flashcard .src svg { width: 12px; height: 12px; flex: none; }
+  .card-enter-active { transition: opacity .5s var(--ease-out), transform .6s var(--spring); }
+  .card-enter-from { opacity: 0; transform: translateY(-16px) scale(.94); }
+  .card-leave-active { transition: opacity .3s ease, transform .3s ease; position: absolute; left: 0; right: 0; }
+  .card-leave-to { opacity: 0; transform: scale(.94); }
+  .card-move { transition: transform .55s var(--ease-out); }
   .mk-more {
     margin-top: auto; padding-top: 14px; border-top: 1px solid var(--border);
     display: flex; justify-content: space-between; align-items: center;
     font-size: 11.5px; color: var(--ink-3);
   }
-  .mk-more b { color: var(--ink-2); font-weight: 700; }
+  .mk-more b { color: var(--ink-2); font-weight: 700; font-variant-numeric: tabular-nums; }
 
   /* ============================================================
      素材来源跑马灯
